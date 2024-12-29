@@ -6,13 +6,14 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Utility class for building standardized HTTP responses.
  */
 public class AppResponse {
 
-    private static HashMap<String, Object> response;
+    private static Map<String, Object> response;
 
     /**
      * Creates a success response with a default status and code.
@@ -72,10 +73,19 @@ public class AppResponse {
     }
 
     /**
+     * Adds errors to the response.
+     * @param errors the errors to include in the response
+     */
+    public AppResponse withErrors(Map<String, String> errors) {
+        response.put("errors", errors);
+        return this;
+    }
+
+    /**
      * Builds the response and returns it as a {@link ResponseEntity}.
      */
     public ResponseEntity<Object> build() {
         int code = (int) response.get("code");
-        return new ResponseEntity<Object>(response, HttpStatusCode.valueOf(code));
+        return new ResponseEntity<>(response, HttpStatusCode.valueOf(code));
     }
 }
