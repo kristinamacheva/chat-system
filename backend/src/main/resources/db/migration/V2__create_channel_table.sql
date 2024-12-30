@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS td_channels (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(256) NOT NULL,
+    is_active INT DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS td_roles (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30) UNIQUE NOT NULL
+);
+
+INSERT INTO td_roles (name) VALUES
+    ('OWNER'),
+    ('ADMIN'),
+    ('GUEST');

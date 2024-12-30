@@ -2,7 +2,7 @@ package com.example.backend.services;
 
 import com.example.backend.dto.UserDTO;
 import com.example.backend.entities.User;
-import com.example.backend.errors.UserWithThisEmailAlreadyExistsException;
+import com.example.backend.exceptions.UserWithThisEmailAlreadyExistsException;
 import com.example.backend.repositories.UserRepository;
 import com.example.backend.utils.PasswordUtils;
 import org.springframework.stereotype.Service;

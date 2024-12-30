@@ -1,4 +1,4 @@
-package com.example.backend.errors;
+package com.example.backend.exceptions;
 
 public class UserWithThisEmailAlreadyExistsException extends RuntimeException {
 
