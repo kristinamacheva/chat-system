@@ -1,5 +1,6 @@
 package com.example.backend.http;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +71,17 @@ public class AppResponse {
         ArrayList<Object> list = new ArrayList<>();
         list.add(data);
         return this.withData(list);
+    }
+
+    /**
+     * Adds pagination metadata to the response.
+     * @param page the {@link Page} object that contains the paginated data and metadata.
+     */
+    public AppResponse withPagination(Page<?> page) {
+        response.put("totalPages", page.getTotalPages());
+        response.put("currentPage", page.getNumber());
+        response.put("pageSize", page.getSize());
+        return this;
     }
 
     /**
