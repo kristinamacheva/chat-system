@@ -40,6 +40,11 @@ public class UserService {
         return users.map(this::mapToUserDTO);
     }
 
+    public UserDTO getOne(int id) {
+        User user = userRepository.findByIdAndIsActive(id, Status.ACTIVE);
+        return mapToUserDTO(user);
+    }
+
     private UserDTO mapToUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());

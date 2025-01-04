@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByEmail(String email);
+    User findByIdAndIsActive(int id, int isActive);
     Page<User> findByIsActive(int isActive, Pageable pageable);
     Page<User> findByEmailContainingIgnoreCaseAndIsActive(String email, int isActive, Pageable pageable);
 }

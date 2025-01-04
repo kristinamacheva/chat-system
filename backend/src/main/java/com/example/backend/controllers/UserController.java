@@ -42,4 +42,13 @@ public class UserController {
                 .withPagination(result)
                 .build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable int id) {
+        var result = userService.getOne(id);
+        return AppResponse.success()
+                .withMessage("User found successfully")
+                .withData(result)
+                .build();
+    }
 }
