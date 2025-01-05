@@ -1,8 +1,11 @@
 package com.example.backend.services;
 
-import com.example.backend.dto.UserDTO;
+import com.example.backend.dto.CreateUserDTO;
+import com.example.backend.dto.ResponseUserDTO;
 import com.example.backend.entities.User;
+import com.example.backend.exceptions.UserNotFoundException;
 import com.example.backend.exceptions.UserWithThisEmailAlreadyExistsException;
+import com.example.backend.mappers.UserMapper;
 import com.example.backend.repositories.UserRepository;
 import com.example.backend.utils.PasswordUtils;
 import com.example.backend.utils.Status;
@@ -20,36 +23,26 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDTO register(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new UserWithThisEmailAlreadyExistsException(user.getEmail());
+    public ResponseUserDTO register(CreateUserDTO createUserDTO) {
+        if (userRepository.existsByEmail(createUserDTO.getEmail())) {
+            throw new UserWithThisEmailAlreadyExistsException(createUserDTO.getEmail());
         }
-        String encodedPassword = PasswordUtils.hashPassword(user.getPassword());
-        user.setPassword(encodedPassword);
-        return mapToUserDTO(userRepository.save(user));
+        User user = UserMapper.toEntity(createUserDTO);
+        user.setPassword(PasswordUtils.hashPassword(user.getPassword()));
+        return UserMapper.toResponseDTO(userRepository.save(user));
     }
 
-    public Page<UserDTO> getAll(String email, int page, int size) {
+    public Page<ResponseUserDTO> getAll(String email, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> users;
-        if (email != null && !email.isBlank()) {
-            users = userRepository.findByEmailContainingIgnoreCaseAndIsActive(email, Status.ACTIVE, pageable);
-        } else {
-            users = userRepository.findByIsActive(Status.ACTIVE, pageable);
-        }
-        return users.map(this::mapToUserDTO);
+        Page<User> users = (email != null && !email.isBlank())
+                ? userRepository.findByEmailContainingIgnoreCaseAndIsActive(email, Status.ACTIVE, pageable)
+                : userRepository.findByIsActive(Status.ACTIVE, pageable);
+        return users.map(UserMapper::toResponseDTO);
     }
 
-    public UserDTO getOne(int id) {
-        User user = userRepository.findByIdAndIsActive(id, Status.ACTIVE);
-        return mapToUserDTO(user);
-    }
-
-    private UserDTO mapToUserDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setFullName(user.getFullName());
-        userDTO.setEmail(user.getEmail());
-        return userDTO;
+    public ResponseUserDTO getOne(int id) {
+        User user = userRepository.findByIdAndIsActive(id, Status.ACTIVE)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        return UserMapper.toResponseDTO(user);
     }
 }

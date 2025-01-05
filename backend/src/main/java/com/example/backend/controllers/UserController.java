@@ -1,6 +1,6 @@
 package com.example.backend.controllers;
 
-import com.example.backend.entities.User;
+import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.http.AppResponse;
 import com.example.backend.services.UserService;
 import jakarta.validation.Valid;
@@ -20,8 +20,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid User user) {
-        var result = userService.register(user);
+    public ResponseEntity<?> register(@RequestBody @Valid CreateUserDTO createUserDTO) {
+        var result = userService.register(createUserDTO);
         return AppResponse.success()
                 .withMessage("User registered successfully")
                 .withData(result)
