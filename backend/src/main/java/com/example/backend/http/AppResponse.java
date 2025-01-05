@@ -79,7 +79,7 @@ public class AppResponse {
      */
     public AppResponse withPagination(Page<?> page) {
         response.put("totalPages", page.getTotalPages());
-        response.put("currentPage", page.getNumber());
+        response.put("currentPage", page.getNumber() + 1);
         response.put("pageSize", page.getSize());
         return this;
     }

@@ -35,7 +35,8 @@ public class UserController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size
     ) {
-        var result = userService.getAll(email, page, size);
+        int pageIndex = page > 0 ? page - 1 : 0;
+        var result = userService.getAll(email, pageIndex, size);
         return AppResponse.success()
                 .withMessage("Users found successfully")
                 .withData(result.getContent())
