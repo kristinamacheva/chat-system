@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "tc_friend_invitations")
 @Getter
@@ -26,7 +29,7 @@ public class FriendInvitation {
     private User recipient;
 
     @Column(nullable = false)
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "is_active")
     private int isActive = 1;
