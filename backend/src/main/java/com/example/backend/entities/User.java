@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "td_users")
 @Getter
@@ -34,6 +36,18 @@ public class User {
     @Column(name = "password", nullable = false, length = 256)
     @NotBlank(message = "Password is required")
     private String password;
+
+    @OneToMany(mappedBy = "recipient")
+    private List<FriendInvitation> receivedFriendInvitations;
+
+    @OneToMany(mappedBy = "user")
+    private List<ChannelMembership> memberships;
+
+    @OneToMany(mappedBy = "user1")
+    private List<Friendship> friendshipsAsUser1;
+
+    @OneToMany(mappedBy = "user2")
+    private List<Friendship> friendshipsAsUser2;
 
     @Column(name = "is_active")
     private int isActive = 1;
