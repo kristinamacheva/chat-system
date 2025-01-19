@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface FriendInvitationRepository extends JpaRepository<FriendInvitation, Integer> {
 
-    boolean existsBySenderIdAndRecipientId(int senderId, int recipientId);
+    boolean existsBySenderIdAndRecipientIdAndIsActive(int senderId, int recipientId, int isActive);
+    Optional<FriendInvitation> findByIdAndIsActive(int id, int isActive);
 }
