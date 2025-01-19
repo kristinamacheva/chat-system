@@ -5,6 +5,5 @@ const baseUrl = `${API_BASE_URL}/users`;
 
 export const getOne = async (id) => {
     const result = await request.get(`${baseUrl}/${id}`);
-
     return result;
 };

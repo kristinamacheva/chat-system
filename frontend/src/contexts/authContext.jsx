@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import * as authService from "../services/authService";
+import * as userService from "../services/userService";
 import UserNotFound from "../components/user-not-found/UserNotFound";
 
 const AuthContext = createContext();
@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         setIsLoading(true);
-        authService
+        userService
             .getOne(userId)
             .then((result) => {
                 setUser(result.data);
