@@ -1,6 +1,7 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
 import FriendsList from "./friends-list/FriendsList";
 import styles from "./friends-page.module.css";
+import FriendInvitationsList from "./invitations-list/FriendInvitationsList";
 
 export default function FriendsPage() {
     return (
@@ -23,6 +24,9 @@ export default function FriendsPage() {
                 <TabPanels>
                     <TabPanel>
                         <FriendsList/>
+                    </TabPanel>
+                    <TabPanel>
+                        <FriendInvitationsList/>
                     </TabPanel>
                 </TabPanels>
             </Tabs>
