@@ -1,6 +1,7 @@
 package com.example.backend.services;
 
 import com.example.backend.dto.CreateFriendInvitationDTO;
+import com.example.backend.dto.ResponseFriendInvitationDTO;
 import com.example.backend.entities.FriendInvitation;
 import com.example.backend.entities.Friendship;
 import com.example.backend.entities.User;
@@ -12,7 +13,11 @@ import com.example.backend.mappers.FriendshipMapper;
 import com.example.backend.repositories.FriendInvitationRepository;
 import com.example.backend.repositories.FriendshipRepository;
 import com.example.backend.repositories.UserRepository;
+import com.example.backend.utils.Status;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import static com.example.backend.utils.Status.ACTIVE;
@@ -38,6 +43,12 @@ public class FriendInvitationService {
         checkExistingActiveInvitation(sender, recipient);
         FriendInvitation invitation = FriendInvitationMapper.toEntity(sender, recipient);
         return friendInvitationRepository.save(invitation);
+    }
+
+    public Page<ResponseFriendInvitationDTO> getAll(int recipientId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<FriendInvitation> invitations =  friendInvitationRepository.findByRecipientIdAndIsActive(recipientId, Status.ACTIVE, pageable);
+        return invitations.map(FriendInvitationMapper::toResponseDTO);
     }
 
     @Transactional

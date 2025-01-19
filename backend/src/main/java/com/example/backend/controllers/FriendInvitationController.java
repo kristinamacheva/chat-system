@@ -25,6 +25,21 @@ public class FriendInvitationController {
                 .build();
     }
 
+    @GetMapping
+    public ResponseEntity<?> getAll(
+            @RequestParam(name = "recipientId") int recipientId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size
+    ) {
+        int pageIndex = page > 0 ? page - 1 : 0;
+        var result = friendInvitationService.getAll(recipientId, pageIndex, size);
+        return AppResponse.success()
+                .withMessage("Invitations fetched successfully")
+                .withData(result.getContent())
+                .withPagination(result)
+                .build();
+    }
+
     @PutMapping("/{id}/accept")
     public ResponseEntity<?> acceptFriendInvitation(@PathVariable int id) {
         friendInvitationService.acceptFriendInvitation(id);
