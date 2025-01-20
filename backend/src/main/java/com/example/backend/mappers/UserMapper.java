@@ -2,6 +2,7 @@ package com.example.backend.mappers;
 
 import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.ResponseUserDTO;
+import com.example.backend.dto.UserWithFriendshipStatusDTO;
 import com.example.backend.entities.User;
 
 public class UserMapper {
@@ -20,5 +21,14 @@ public class UserMapper {
         responseUserDTO.setFullName(user.getFullName());
         responseUserDTO.setEmail(user.getEmail());
         return responseUserDTO;
+    }
+
+    public static UserWithFriendshipStatusDTO toUserWithFriendshipStatusDTO(User user, boolean isFriend) {
+        UserWithFriendshipStatusDTO dto = new UserWithFriendshipStatusDTO();
+        dto.setId(user.getId());
+        dto.setFullName(user.getFullName());
+        dto.setEmail(user.getEmail());
+        dto.setFriend(isFriend);
+        return dto;
     }
 }
