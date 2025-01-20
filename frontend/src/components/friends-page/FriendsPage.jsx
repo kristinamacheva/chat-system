@@ -2,6 +2,7 @@ import { Box, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/r
 import FriendsList from "./friends-list/FriendsList";
 import styles from "./friends-page.module.css";
 import FriendInvitationsList from "./invitations-list/FriendInvitationsList";
+import UsersList from "./users-list/UsersList";
 
 export default function FriendsPage() {
     return (
@@ -27,6 +28,9 @@ export default function FriendsPage() {
                     </TabPanel>
                     <TabPanel>
                         <FriendInvitationsList/>
+                    </TabPanel>
+                    <TabPanel>
+                        <UsersList/>
                     </TabPanel>
                 </TabPanels>
             </Tabs>

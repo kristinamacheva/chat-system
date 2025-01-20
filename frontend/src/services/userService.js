@@ -7,3 +7,17 @@ export const getOne = async (id) => {
     const result = await request.get(`${baseUrl}/${id}`);
     return result;
 };
+
+export const getAll = async (page, params = {}) => {
+    Object.keys(params).forEach(
+        (key) => params[key] === "" && delete params[key]
+    );
+    const queryParams = new URLSearchParams({
+        page,
+        ...params, 
+    });
+
+    const url = `${baseUrl}?${queryParams.toString()}`;
+    const result = await request.get(url);
+    return result;
+};
