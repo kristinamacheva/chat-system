@@ -10,13 +10,12 @@ export default function FriendsListItem({ id, fullName, email }) {
             background="white"
             spacing="4"
             justifyContent="center"
-            width="360px"
+            width="320px"
             height="100px"
         >
             <Stack
                 direction="row"
                 alignItems="center"
-                justifyContent="center"
                 spacing="5"
             >
                 <Avatar name={fullName} />

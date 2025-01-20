@@ -33,7 +33,10 @@ export default function UsersList() {
             setIsLoading(true);
             try {
                 const { data, totalPages, currentPage } =
-                    await userService.getAll(1, { email: emailSearchValue });
+                    await userService.getAll(1, {
+                        email: emailSearchValue,
+                        userId: id,
+                    });
 
                 setUsers(data);
                 setHasMore(totalPages > currentPage);
@@ -59,8 +62,9 @@ export default function UsersList() {
 
         try {
             const { data, totalPages, currentPage } =
-                await friendInvitationService.getAll(index, {
+                await userService.getAll(index, {
                     email: emailSearchValue,
+                    userId: id,
                 });
             setInvitations((state) => [...state, ...data]);
             setHasMore(totalPages > currentPage);
