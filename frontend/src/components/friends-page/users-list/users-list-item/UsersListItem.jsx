@@ -7,10 +7,38 @@ import {
     Text,
     Card,
     Button,
+    useToast,
 } from "@chakra-ui/react";
 import { FaEnvelope } from "react-icons/fa";
+import * as friendInvitationService from "../../../../services/friendInvitationService";
+import { useContext } from "react";
+import AuthContext from "../../../../contexts/authContext";
 
-export default function UsersListItem({ id, fullName, email, friend }) {
+export default function UsersListItem({ user }) {
+    const { id } = useContext(AuthContext);
+    const toast = useToast();
+    
+    const sendRequestHandler = async (recipientId) => {
+        try {
+            await friendInvitationService.create(id, recipientId);
+            toast({
+                title: "Request send successfully",
+                status: "success",
+                duration: 6000,
+                isClosable: true,
+                position: "bottom",
+            });
+        } catch (error) {
+            toast({
+                title: error.message || "Error sending request",
+                status: "error",
+                duration: 6000,
+                isClosable: true,
+                position: "bottom",
+            });
+        }
+    };
+
     return (
         <Card
             px="5"
@@ -28,19 +56,19 @@ export default function UsersListItem({ id, fullName, email, friend }) {
                 justifyContent="space-between"
             >
                 <Stack direction="row" spacing="5">
-                    <Avatar name={fullName} />
+                    <Avatar name={user.fullName} />
                     <Stack spacing="0.5" alignItems="center">
                         <Heading as="h4" size="sm">
-                            {fullName}
+                            {user.fullName}
                         </Heading>
                         <HStack>
                             <Icon as={FaEnvelope} color="themePurple.800" />
-                            <Text>{email}</Text>
+                            <Text>{user.email}</Text>
                         </HStack>
                     </Stack>
                 </Stack>
-                {!friend && (
-                    <Button variant="primary" type="submit">
+                {!user.friend && (
+                    <Button variant="primary" type="submit" onClick={() => sendRequestHandler(user.id)}>
                         Send request
                     </Button>
                 )}

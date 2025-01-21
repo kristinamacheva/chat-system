@@ -61,11 +61,13 @@ export default function UsersList() {
         setIsLoading(true);
 
         try {
-            const { data, totalPages, currentPage } =
-                await userService.getAll(index, {
+            const { data, totalPages, currentPage } = await userService.getAll(
+                index,
+                {
                     email: emailSearchValue,
                     userId: id,
-                });
+                }
+            );
             setInvitations((state) => [...state, ...data]);
             setHasMore(totalPages > currentPage);
         } catch (error) {
@@ -144,7 +146,10 @@ export default function UsersList() {
             <Stack>
                 {Array.isArray(users) && users.length > 0 ? (
                     users.map((user) => (
-                        <UsersListItem key={user.id} {...user} />
+                        <UsersListItem
+                            key={user.id}
+                            user={user}
+                        />
                     ))
                 ) : (
                     <Flex justifyContent="center" alignItems="center">

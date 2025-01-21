@@ -10,6 +10,10 @@ export const getAll = async (recipientId, page) => {
     return result;
 };
 
+export const create = async (senderId, recipientId) => {
+    await request.post(`${baseUrl}`, { senderId, recipientId });
+};
+
 export const accept = async (invitationId) => {
     await request.put(`${baseUrl}/${invitationId}/accept`);
 };
