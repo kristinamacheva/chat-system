@@ -29,10 +29,6 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private List<ChannelMembership> memberships;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "id")
-    private User owner;
-
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages;
 

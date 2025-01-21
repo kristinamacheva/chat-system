@@ -31,7 +31,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getAll(
-            @RequestParam(name = "userId", required = true) int id,
+            @RequestParam(name = "userId") int id,
             @RequestParam(name = "email", required = false) String email,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size
