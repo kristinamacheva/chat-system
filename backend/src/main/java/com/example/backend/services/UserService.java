@@ -16,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import static com.example.backend.utils.Status.ACTIVE;
+
 @Service
 public class UserService {
 
@@ -36,22 +38,19 @@ public class UserService {
         return UserMapper.toResponseDTO(userRepository.save(user));
     }
 
-    public Page<?> getAll(Integer userId, String email, int page, int size) {
+    public Page<?> getAll(int id, String email, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> users = (email != null && !email.isBlank())
-                ? userRepository.findByEmailContainingIgnoreCaseAndIsActive(email, Status.ACTIVE, pageable)
-                : userRepository.findByIsActive(Status.ACTIVE, pageable);
-        if (userId != null) {
-            return users.map(user -> {
-                boolean isFriend = friendshipRepository.existsActiveFriendship(userId, user.getId());
-                return UserMapper.toUserWithFriendshipStatusDTO(user, isFriend);
-            });
-        }
-        return users.map(UserMapper::toResponseDTO);
+                ? userRepository.findByEmailContainingIgnoreCaseAndIsActiveAndIdNot(email, ACTIVE, id, pageable)
+                : userRepository.findByIsActiveAndIdNot(ACTIVE, id, pageable);
+        return users.map(user -> {
+            boolean isFriend = friendshipRepository.existsActiveFriendship(id, user.getId());
+            return UserMapper.toUserWithFriendshipStatusDTO(user, isFriend);
+        });
     }
 
     public ResponseUserDTO getOne(int id) {
-        User user = userRepository.findByIdAndIsActive(id, Status.ACTIVE)
+        User user = userRepository.findByIdAndIsActive(id, ACTIVE)
                 .orElseThrow(() -> new UserNotFoundException(id));
         return UserMapper.toResponseDTO(user);
     }
