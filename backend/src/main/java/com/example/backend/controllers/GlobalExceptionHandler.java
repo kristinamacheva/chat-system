@@ -39,6 +39,12 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleAllExceptions(Exception ex) {
+        if (ex.getClass().getSimpleName().contains("NotFoundException")) {
+            return AppResponse.error()
+                    .withMessage(ex.getMessage())
+                    .withCode(HttpStatus.NOT_FOUND)
+                    .build();
+        }
         return AppResponse.error()
                 .withMessage(ex.getMessage())
                 .withCode(HttpStatus.BAD_REQUEST)

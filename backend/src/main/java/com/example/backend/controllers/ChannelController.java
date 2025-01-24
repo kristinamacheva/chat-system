@@ -1,6 +1,8 @@
 package com.example.backend.controllers;
 
 import com.example.backend.dto.CreateChannelDTO;
+import com.example.backend.dto.ResponseChannelDetailsDTO;
+import com.example.backend.dto.UpdateChannelDTO;
 import com.example.backend.http.AppResponse;
 import com.example.backend.services.ChannelService;
 import jakarta.validation.Valid;
@@ -39,6 +41,27 @@ public class ChannelController {
         var result = channelService.create(createChannelDTO, userId);
         return AppResponse.success()
                 .withMessage("Channel created successfully")
+                .withData(result)
+                .build();
+    }
+
+    @GetMapping("/{channelId}")
+    public ResponseEntity<?> getChannel(@PathVariable int channelId) {
+        var result = channelService.getOne(channelId);
+        return AppResponse.success()
+                .withMessage("Channel found successfully")
+                .withData(result)
+                .build();
+    }
+
+    @PutMapping("/{channelId}")
+    public ResponseEntity<?> update(
+            @PathVariable int channelId,
+            @RequestParam(name = "userId") int userId,
+            @RequestBody @Valid UpdateChannelDTO updateChannelDTO) {
+        var result = channelService.update(channelId, updateChannelDTO, userId);
+        return AppResponse.success()
+                .withMessage("Channel updated successfully")
                 .withData(result)
                 .build();
     }

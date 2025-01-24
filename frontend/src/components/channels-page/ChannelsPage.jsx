@@ -12,7 +12,7 @@ import {
 import ChannelCreate from "./channel-create/ChannelCreate";
 import * as channelService from "../../services/channelService";
 import AuthContext from "../../contexts/authContext";
-import ChannelListItem from "./household-list-item/ChannelListItem";
+import ChannelListItem from "./channel-list-item/ChannelListItem";
 
 export default function ChannelsPage() {
     const [channels, setChannels] = useState([]);

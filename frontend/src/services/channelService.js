@@ -14,3 +14,16 @@ export const getAll = async (userId, page) => {
     );
     return result;
 };
+
+export const getOne = async (id) => {
+    const result = await request.get(`${baseUrl}/${id}`);
+    return result;
+};
+
+export const update = async (channelId, userId, channelData) => {
+    const result = await request.put(
+        `${baseUrl}/${channelId}?userId=${userId}`,
+        channelData
+    );
+    return result;
+};

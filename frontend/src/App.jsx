@@ -7,6 +7,7 @@ import ChannelsPage from "./components/channels-page/ChannelsPage";
 import Navbar from "./components/navbar/Navbar";
 import NotFound from "./components/not-found/NotFound";
 import UserNotFound from "./components/user-not-found/UserNotFound";
+import ChannelDetails from "./components/channels-page/channel-details/ChannelDetails";
 
 function App() {
     return (
@@ -15,7 +16,14 @@ function App() {
                 <Route element={<Navbar />}>
                     <Route path={Path.Home} element={<Home />} />
                     <Route path={Path.FriendsPage} element={<FriendsPage />} />
-                    <Route path={Path.ChannelsPage} element={<ChannelsPage />} />
+                    <Route
+                        path={Path.ChannelsPage}
+                        element={<ChannelsPage />}
+                    />
+                    <Route
+                        path={Path.ChannelDetails}
+                        element={<ChannelDetails />}
+                    />
                 </Route>
                 {/* <Route path="/user-not-found" element={<UserNotFound />} /> */}
                 <Route path="*" element={<NotFound />} />

@@ -1,15 +1,14 @@
 package com.example.backend.services;
 
-import com.example.backend.dto.CreateChannelDTO;
-import com.example.backend.dto.ResponseChannelDTO;
+import com.example.backend.dto.*;
 import com.example.backend.entities.Channel;
 import com.example.backend.entities.ChannelMembership;
 import com.example.backend.entities.Role;
 import com.example.backend.entities.User;
-import com.example.backend.exceptions.RoleNotFoundException;
-import com.example.backend.exceptions.UserNotFoundException;
+import com.example.backend.exceptions.*;
 import com.example.backend.mappers.ChannelMapper;
 import com.example.backend.mappers.ChannelMembershipMapper;
+import com.example.backend.mappers.UserMapper;
 import com.example.backend.repositories.ChannelMembershipRepository;
 import com.example.backend.repositories.ChannelRepository;
 import com.example.backend.repositories.RoleRepository;
@@ -19,6 +18,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.example.backend.utils.Status.ACTIVE;
 
@@ -57,5 +59,30 @@ public class ChannelService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Channel> channels = channelRepository.findActiveChannelsForUser(userId, pageable);
         return channels.map(ChannelMapper::toResponseDTO);
+    }
+
+    public ResponseChannelDetailsDTO getOne(int channelId) {
+        Channel channel = channelRepository.findByIdAndIsActive(channelId, ACTIVE)
+                .orElseThrow(() -> new ChannelNotFoundException(channelId));
+        ChannelMembership ownerMembership = channelMembershipRepository.findOwnerByChannelId(channelId)
+                .orElseThrow(() -> new OwnerNotFoundException(channelId));
+        ResponseUserDTO owner = UserMapper.toResponseDTO(ownerMembership.getUser());
+        Set<ChannelMembership> adminsMemberships = channelMembershipRepository.findAdminsByChannelId(channelId);
+        Set<ResponseUserDTO> admins = adminsMemberships.stream()
+                .map(membership -> UserMapper.toResponseDTO(membership.getUser()))
+                .collect(Collectors.toSet());
+        return ChannelMapper.toResponseDetailsDTO(channel, owner, admins);
+    }
+
+    public ResponseChannelDTO update(int channelId, UpdateChannelDTO updateChannelDTO, int userId) {
+        Channel channel = channelRepository.findByIdAndIsActive(channelId, ACTIVE)
+                .orElseThrow(() -> new ChannelNotFoundException(channelId));
+        ChannelMembership membership = channelMembershipRepository.findByChannelIdAndUserIdAndIsActive(channelId, userId, ACTIVE)
+                .orElseThrow(() -> new MembershipNotFoundException(channelId, userId));
+        if (!(membership.getRole().getName().equals("ADMIN") || membership.getRole().getName().equals("OWNER"))) {
+            throw new UnauthorizedAccessException();
+        }
+        channel.setName(updateChannelDTO.getName());
+        return ChannelMapper.toResponseDTO(channelRepository.save(channel));
     }
 }

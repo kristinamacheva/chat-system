@@ -3,6 +3,8 @@ package com.example.backend.mappers;
 import com.example.backend.dto.*;
 import com.example.backend.entities.Channel;
 
+import java.util.Set;
+
 public class ChannelMapper {
 
     public static Channel toEntity(CreateChannelDTO createChannelDTO) {
@@ -16,5 +18,14 @@ public class ChannelMapper {
         responseChannelDTO.setId(channel.getId());
         responseChannelDTO.setName(channel.getName());
         return responseChannelDTO;
+    }
+
+    public static ResponseChannelDetailsDTO toResponseDetailsDTO(Channel channel, ResponseUserDTO owner, Set<ResponseUserDTO> admins) {
+        ResponseChannelDetailsDTO responseChannelDetailsDTO = new ResponseChannelDetailsDTO();
+        responseChannelDetailsDTO.setId(channel.getId());
+        responseChannelDetailsDTO.setName(channel.getName());
+        responseChannelDetailsDTO.setOwner(owner);
+        responseChannelDetailsDTO.setAdmins(admins);
+        return responseChannelDetailsDTO;
     }
 }
