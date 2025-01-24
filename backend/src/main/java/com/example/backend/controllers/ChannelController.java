@@ -58,11 +58,23 @@ public class ChannelController {
     public ResponseEntity<?> update(
             @PathVariable int channelId,
             @RequestParam(name = "userId") int userId,
-            @RequestBody @Valid UpdateChannelDTO updateChannelDTO) {
+            @RequestBody @Valid UpdateChannelDTO updateChannelDTO
+    ) {
         var result = channelService.update(channelId, updateChannelDTO, userId);
         return AppResponse.success()
                 .withMessage("Channel updated successfully")
                 .withData(result)
+                .build();
+    }
+
+    @DeleteMapping("/{channelId}")
+    public ResponseEntity<?> delete(
+            @PathVariable int channelId,
+            @RequestParam(name = "userId") int userId
+    ) {
+        channelService.delete(channelId, userId);
+        return AppResponse.success()
+                .withMessage("Channel deleted successfully")
                 .build();
     }
 }

@@ -4,7 +4,10 @@ import * as request from "../lib/request";
 const baseUrl = `${API_BASE_URL}/channels`;
 
 export const create = async (userId, channelData) => {
-    const result = await request.post(`${baseUrl}?userId=${userId}`, channelData);
+    const result = await request.post(
+        `${baseUrl}?userId=${userId}`,
+        channelData
+    );
     return result;
 };
 
@@ -26,4 +29,8 @@ export const update = async (channelId, userId, channelData) => {
         channelData
     );
     return result;
+};
+
+export const remove = async (channelId, userId) => {
+    await request.remove(`${baseUrl}/${channelId}?userId=${userId}`);
 };

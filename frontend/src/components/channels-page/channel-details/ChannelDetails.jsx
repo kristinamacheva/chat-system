@@ -79,6 +79,30 @@ export default function ChannelDetails() {
         return <ChannelNotFound />;
     }
 
+    const deleteChannelHandler = (channelId) => {
+        channelService
+            .remove(channelId, currentUserId)
+            .then(() => {
+                toast({
+                    title: "Channel deleted successfully!",
+                    status: "success",
+                    duration: 6000,
+                    isClosable: true,
+                    position: "bottom",
+                });
+                navigate("/channels");
+            })
+            .catch((error) => {
+                toast({
+                    title: error.message || "Could not delete the channel",
+                    status: "error",
+                    duration: 6000,
+                    isClosable: true,
+                    position: "bottom",
+                });
+            });
+    };
+
     return (
         <>
             <Card background="white" p="2" boxShadow="xs">
@@ -120,9 +144,7 @@ export default function ChannelDetails() {
                                 icon={<FaTrashCan fontSize="22px" />}
                                 variant="ghost"
                                 color="themePurple.800"
-                                // onClick={() =>
-                                //     deleteChannelHandler(channel.id)
-                                // }
+                                onClick={() => deleteChannelHandler(channel.id)}
                             />
                         )}
                     </HStack>

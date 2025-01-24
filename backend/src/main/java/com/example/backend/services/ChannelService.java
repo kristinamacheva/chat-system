@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.example.backend.utils.Status.ACTIVE;
+import static com.example.backend.utils.Status.INACTIVE;
 
 @Service
 public class ChannelService {
@@ -84,5 +85,17 @@ public class ChannelService {
         }
         channel.setName(updateChannelDTO.getName());
         return ChannelMapper.toResponseDTO(channelRepository.save(channel));
+    }
+
+    public void delete(int channelId,  int userId) {
+        Channel channel = channelRepository.findByIdAndIsActive(channelId, ACTIVE)
+                .orElseThrow(() -> new ChannelNotFoundException(channelId));
+        ChannelMembership membership = channelMembershipRepository.findByChannelIdAndUserIdAndIsActive(channelId, userId, ACTIVE)
+                .orElseThrow(() -> new MembershipNotFoundException(channelId, userId));
+        if (!membership.getRole().getName().equals("OWNER")) {
+            throw new UnauthorizedAccessException();
+        }
+        channel.setIsActive(INACTIVE);
+        channelRepository.save(channel);
     }
 }
