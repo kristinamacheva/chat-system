@@ -134,22 +134,22 @@ export default function UsersList() {
                                 placeholder="Enter email"
                             />
                         </FormControl>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            mt={{ base: "3", md: "8" }}
+                            mb={{ base: "4" }}
+                        >
+                            Search
+                        </Button>
                     </Stack>
                 </Stack>
-                <Flex justify="flex-end" my="3" mx="1">
-                    <Button variant="primary" type="submit">
-                        Search
-                    </Button>
-                </Flex>
             </form>
 
             <Stack>
                 {Array.isArray(users) && users.length > 0 ? (
                     users.map((user) => (
-                        <UsersListItem
-                            key={user.id}
-                            user={user}
-                        />
+                        <UsersListItem key={user.id} user={user} />
                     ))
                 ) : (
                     <Flex justifyContent="center" alignItems="center">
