@@ -2,7 +2,6 @@ package com.example.backend.mappers;
 
 import com.example.backend.dto.*;
 import com.example.backend.entities.Channel;
-import com.example.backend.entities.User;
 
 public class ChannelMapper {
 
@@ -12,11 +11,10 @@ public class ChannelMapper {
         return channel;
     }
 
-    public static ResponseChannelDTO toResponseDTO(Channel channel, User owner) {
+    public static ResponseChannelDTO toResponseDTO(Channel channel) {
         ResponseChannelDTO responseChannelDTO = new ResponseChannelDTO();
         responseChannelDTO.setId(channel.getId());
         responseChannelDTO.setName(channel.getName());
-        responseChannelDTO.setOwnerId(owner.getId());
         return responseChannelDTO;
     }
 }

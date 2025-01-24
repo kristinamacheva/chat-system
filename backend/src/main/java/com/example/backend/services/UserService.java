@@ -2,7 +2,6 @@ package com.example.backend.services;
 
 import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.ResponseUserDTO;
-import com.example.backend.dto.UserWithFriendshipStatusDTO;
 import com.example.backend.entities.User;
 import com.example.backend.exceptions.UserNotFoundException;
 import com.example.backend.exceptions.UserWithThisEmailAlreadyExistsException;
@@ -10,7 +9,6 @@ import com.example.backend.mappers.UserMapper;
 import com.example.backend.repositories.FriendshipRepository;
 import com.example.backend.repositories.UserRepository;
 import com.example.backend.utils.PasswordUtils;
-import com.example.backend.utils.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

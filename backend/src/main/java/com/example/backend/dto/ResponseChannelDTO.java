@@ -11,5 +11,4 @@ public class ResponseChannelDTO {
 
     private int id;
     private String name;
-    private int ownerId;
 }

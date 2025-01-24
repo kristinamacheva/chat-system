@@ -17,11 +17,26 @@ public class ChannelController {
         this.channelService = channelService;
     }
 
+    @GetMapping
+    public ResponseEntity<?> getAll(
+            @RequestParam(name = "userId") int userId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size
+    ) {
+        int pageIndex = page > 0 ? page - 1 : 0;
+        var result = channelService.getAll(userId, pageIndex, size);
+        return AppResponse.success()
+                .withMessage("Channels fetched successfully")
+                .withData(result.getContent())
+                .withPagination(result)
+                .build();
+    }
+
     @PostMapping
-    public ResponseEntity<?> createChannel(
-            @RequestParam(name = "ownerId") int ownerId,
+    public ResponseEntity<?> create(
+            @RequestParam(name = "userId") int userId,
             @RequestBody @Valid CreateChannelDTO createChannelDTO) {
-        var result = channelService.create(createChannelDTO, ownerId);
+        var result = channelService.create(createChannelDTO, userId);
         return AppResponse.success()
                 .withMessage("Channel created successfully")
                 .withData(result)

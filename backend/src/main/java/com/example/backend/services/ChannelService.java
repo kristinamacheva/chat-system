@@ -15,6 +15,9 @@ import com.example.backend.repositories.ChannelRepository;
 import com.example.backend.repositories.RoleRepository;
 import com.example.backend.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import static com.example.backend.utils.Status.ACTIVE;
@@ -47,6 +50,12 @@ public class ChannelService {
                 .orElseThrow(() -> new RoleNotFoundException("OWNER"));
         ChannelMembership membership = ChannelMembershipMapper.toEntity(savedChannel, user, ownerRole);
         channelMembershipRepository.save(membership);
-        return ChannelMapper.toResponseDTO(savedChannel, user);
+        return ChannelMapper.toResponseDTO(savedChannel);
+    }
+
+    public Page<ResponseChannelDTO> getAll(int userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Channel> channels = channelRepository.findActiveChannelsForUser(userId, pageable);
+        return channels.map(ChannelMapper::toResponseDTO);
     }
 }
