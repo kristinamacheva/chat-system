@@ -48,7 +48,7 @@ public class ChannelService {
         Channel channel = ChannelMapper.toEntity(createChannelDTO);
         Channel savedChannel = channelRepository.save(channel);
         User user = userRepository.findByIdAndIsActive(userId, ACTIVE)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(UserNotFoundException::new);
         Role ownerRole = roleRepository.findByName("OWNER")
                 .orElseThrow(() -> new RoleNotFoundException("OWNER"));
         ChannelMembership membership = ChannelMembershipMapper.toEntity(savedChannel, user, ownerRole);
@@ -63,8 +63,7 @@ public class ChannelService {
     }
 
     public ResponseChannelDetailsDTO getOne(int channelId) {
-        Channel channel = channelRepository.findByIdAndIsActive(channelId, ACTIVE)
-                .orElseThrow(() -> new ChannelNotFoundException(channelId));
+        Channel channel = getActiveChannelById(channelId);
         ChannelMembership ownerMembership = channelMembershipRepository.findOwnerByChannelId(channelId)
                 .orElseThrow(() -> new OwnerNotFoundException(channelId));
         ResponseUserDTO owner = UserMapper.toResponseDTO(ownerMembership.getUser());
@@ -76,10 +75,8 @@ public class ChannelService {
     }
 
     public ResponseChannelDTO update(int channelId, UpdateChannelDTO updateChannelDTO, int userId) {
-        Channel channel = channelRepository.findByIdAndIsActive(channelId, ACTIVE)
-                .orElseThrow(() -> new ChannelNotFoundException(channelId));
-        ChannelMembership membership = channelMembershipRepository.findByChannelIdAndUserIdAndIsActive(channelId, userId, ACTIVE)
-                .orElseThrow(() -> new MembershipNotFoundException(channelId, userId));
+        Channel channel = getActiveChannelById(channelId);
+        ChannelMembership membership  = getActiveMembershipByChannelAndUser(channelId, userId);
         if (!(membership.getRole().getName().equals("ADMIN") || membership.getRole().getName().equals("OWNER"))) {
             throw new UnauthorizedAccessException();
         }
@@ -87,15 +84,43 @@ public class ChannelService {
         return ChannelMapper.toResponseDTO(channelRepository.save(channel));
     }
 
+    public ChannelMemberDTO addMember(int channelId, AddChannelMemberDTO addChannelMemberDTO, int userId) {
+        Channel channel = getActiveChannelById(channelId);
+        ChannelMembership requesterMembership = getActiveMembershipByChannelAndUser(channelId, userId);
+        Role requesterRole = requesterMembership.getRole();
+        Role userToAddRole = roleRepository.findByName(addChannelMemberDTO.getRole())
+                .orElseThrow(() -> new RoleNotFoundException(addChannelMemberDTO.getRole()));
+        if (!requesterRole.getName().equals("OWNER") && !(requesterRole.getName().equals("ADMIN") && userToAddRole.getName().equals("GUEST"))) {
+            throw new UnauthorizedAccessException();
+        }
+        User userToAdd = userRepository.findByEmailAndIsActive(addChannelMemberDTO.getEmail(), ACTIVE)
+                .orElseThrow(UserNotFoundException::new);
+        boolean isAlreadyMember = channelMembershipRepository.existsByChannelIdAndUserIdAndIsActive(channelId, userToAdd.getId(), ACTIVE);
+        if (isAlreadyMember) {
+            throw new MembershipAlreadyExistsException();
+        }
+        ChannelMembership newMembership = ChannelMembershipMapper.toEntity(channel, userToAdd, userToAddRole);
+        channelMembershipRepository.save(newMembership);
+        return ChannelMapper.toChannelMemberDTO(userToAdd, userToAddRole);
+    }
+
     public void delete(int channelId,  int userId) {
-        Channel channel = channelRepository.findByIdAndIsActive(channelId, ACTIVE)
-                .orElseThrow(() -> new ChannelNotFoundException(channelId));
-        ChannelMembership membership = channelMembershipRepository.findByChannelIdAndUserIdAndIsActive(channelId, userId, ACTIVE)
-                .orElseThrow(() -> new MembershipNotFoundException(channelId, userId));
+        Channel channel = getActiveChannelById(channelId);
+        ChannelMembership membership = getActiveMembershipByChannelAndUser(channelId, userId);
         if (!membership.getRole().getName().equals("OWNER")) {
             throw new UnauthorizedAccessException();
         }
         channel.setIsActive(INACTIVE);
         channelRepository.save(channel);
+    }
+
+    private Channel getActiveChannelById(int channelId) {
+        return channelRepository.findByIdAndIsActive(channelId, ACTIVE)
+                .orElseThrow(() -> new ChannelNotFoundException(channelId));
+    }
+
+    private ChannelMembership getActiveMembershipByChannelAndUser(int channelId, int userId) {
+        return channelMembershipRepository.findByChannelIdAndUserIdAndIsActive(channelId, userId, ACTIVE)
+                .orElseThrow(() -> new MembershipNotFoundException(channelId, userId));
     }
 }

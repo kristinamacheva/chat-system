@@ -1,5 +1,6 @@
 package com.example.backend.controllers;
 
+import com.example.backend.dto.AddChannelMemberDTO;
 import com.example.backend.dto.CreateChannelDTO;
 import com.example.backend.dto.ResponseChannelDetailsDTO;
 import com.example.backend.dto.UpdateChannelDTO;
@@ -61,6 +62,19 @@ public class ChannelController {
             @RequestBody @Valid UpdateChannelDTO updateChannelDTO
     ) {
         var result = channelService.update(channelId, updateChannelDTO, userId);
+        return AppResponse.success()
+                .withMessage("Channel updated successfully")
+                .withData(result)
+                .build();
+    }
+
+    @PostMapping("/{channelId}/members")
+    public ResponseEntity<?> addMember(
+            @PathVariable int channelId,
+            @RequestBody @Valid AddChannelMemberDTO addChannelMemberDTO,
+            @RequestParam int userId
+    ) {
+        var result = channelService.addMember(channelId, addChannelMemberDTO, userId);
         return AppResponse.success()
                 .withMessage("Channel updated successfully")
                 .withData(result)

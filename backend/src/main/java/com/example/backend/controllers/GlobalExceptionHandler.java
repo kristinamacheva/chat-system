@@ -1,5 +1,6 @@
 package com.example.backend.controllers;
 
+import com.example.backend.exceptions.UnauthorizedAccessException;
 import com.example.backend.http.AppResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,18 @@ public class GlobalExceptionHandler {
                 .withMessage("Invalid fields in the request")
                 .withCode(HttpStatus.BAD_REQUEST)
                 .withErrors(errors)
+                .build();
+    }
+
+    /**
+     * This method handles UnauthorizedAccessException (403 Forbidden).
+     * This exception occurs when the user doesn't have the necessary permissions to access a resource.
+     */
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<?> handleUnauthorizedAccessExceptions(UnauthorizedAccessException ex) {
+        return AppResponse.error()
+                .withMessage("You are not authorized to access this resource")
+                .withCode(HttpStatus.FORBIDDEN)
                 .build();
     }
 

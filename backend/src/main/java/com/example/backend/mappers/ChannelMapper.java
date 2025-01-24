@@ -2,6 +2,8 @@ package com.example.backend.mappers;
 
 import com.example.backend.dto.*;
 import com.example.backend.entities.Channel;
+import com.example.backend.entities.Role;
+import com.example.backend.entities.User;
 
 import java.util.Set;
 
@@ -27,5 +29,14 @@ public class ChannelMapper {
         responseChannelDetailsDTO.setOwner(owner);
         responseChannelDetailsDTO.setAdmins(admins);
         return responseChannelDetailsDTO;
+    }
+
+    public static ChannelMemberDTO toChannelMemberDTO(User member, Role role) {
+        ChannelMemberDTO channelMemberDTO = new ChannelMemberDTO();
+        channelMemberDTO.setId(member.getId());
+        channelMemberDTO.setEmail(member.getEmail());
+        channelMemberDTO.setFullName(member.getFullName());
+        channelMemberDTO.setRole(role.getName());
+        return channelMemberDTO;
     }
 }

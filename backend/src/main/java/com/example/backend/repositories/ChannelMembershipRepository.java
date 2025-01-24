@@ -35,4 +35,5 @@ public interface ChannelMembershipRepository extends JpaRepository<ChannelMember
        """)
     Set<ChannelMembership> findAdminsByChannelId(@Param("channelId") int channelId);
     Optional<ChannelMembership> findByChannelIdAndUserIdAndIsActive(int channelId, int userId, int isActive);
+    boolean existsByChannelIdAndUserIdAndIsActive(int channelId, int userId, int isActive);
 }

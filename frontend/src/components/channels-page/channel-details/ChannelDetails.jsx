@@ -19,6 +19,7 @@ import ChannelNotFound from "../../channel-not-found/ChannelNotFound";
 import { HiUserAdd } from "react-icons/hi";
 import { FaPen, FaTrashCan } from "react-icons/fa6";
 import ChannelEdit from "./channel-edit/ChannelEdit";
+import ChannelAddUser from "./channel-add-user/ChannelAddUser";
 
 export default function ChannelDetails() {
     const [channel, setChannel] = useState({});
@@ -31,6 +32,11 @@ export default function ChannelDetails() {
         isOpen: isEditModalOpen,
         onOpen: onOpenEditModal,
         onClose: onCloseEditModal,
+    } = useDisclosure();
+    const {
+        isOpen: isAddUserModalOpen,
+        onOpen: onOpenAddUserModal,
+        onClose: onCloseAddUserModal,
     } = useDisclosure();
     const toast = useToast();
     const navigate = useNavigate();
@@ -125,7 +131,7 @@ export default function ChannelDetails() {
                                     icon={<HiUserAdd fontSize="22px" />}
                                     variant="ghost"
                                     color="themePurple.800"
-                                    // onClick={onOpenAddUserModal}
+                                    onClick={onOpenAddUserModal}
                                 />
                                 <IconButton
                                     aria-label="Edit"
@@ -155,6 +161,14 @@ export default function ChannelDetails() {
                     isOpen={isEditModalOpen}
                     onClose={onCloseEditModal}
                     channel={channel}
+                    fetchChannel={fetchChannel}
+                />
+            )}
+            {isAddUserModalOpen && (
+                <ChannelAddUser
+                    isOpen={isAddUserModalOpen}
+                    onClose={onCloseAddUserModal}
+                    isOwner={isOwner}
                     fetchChannel={fetchChannel}
                 />
             )}

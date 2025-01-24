@@ -49,7 +49,7 @@ public class UserService {
 
     public ResponseUserDTO getOne(int id) {
         User user = userRepository.findByIdAndIsActive(id, ACTIVE)
-                .orElseThrow(() -> new UserNotFoundException(id));
+                .orElseThrow(UserNotFoundException::new);
         return UserMapper.toResponseDTO(user);
     }
 }
