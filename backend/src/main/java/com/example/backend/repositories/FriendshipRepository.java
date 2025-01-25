@@ -14,20 +14,21 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Integer>
 
     @Query("""
                 SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END
-                FROM Friendship f 
-                WHERE ((f.user1.id = :userId1 AND f.user2.id = :userId2) 
-                   OR (f.user1.id = :userId2 AND f.user2.id = :userId1)) 
+                FROM Friendship f
+                WHERE ((f.user1.id = :userId1 AND f.user2.id = :userId2)
+                   OR (f.user1.id = :userId2 AND f.user2.id = :userId1))
                    AND f.isActive = 1
             """)
-    boolean existsActiveFriendship(@Param("userId1") int userId1, @Param("userId2") int userId2);
+    boolean existsActiveFriendship(int userId1, int userId2);
 
     @Query("""
-                SELECT u 
+                SELECT u
                 FROM User u
                 JOIN Friendship f ON (f.user1 = u OR f.user2 = u)
-                WHERE (f.user1.id = :userId OR f.user2.id = :userId) 
+                WHERE (f.user1.id = :userId OR f.user2.id = :userId)
                 AND f.isActive = 1
                 AND u.id != :userId
             """)
-    Page<User> findFriendsByUserId(@Param("userId") int userId, Pageable pageable);
+
+    Page<User> findFriendsByUserId(int userId, Pageable pageable);
 }

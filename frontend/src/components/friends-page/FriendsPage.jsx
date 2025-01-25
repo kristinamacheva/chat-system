@@ -11,7 +11,6 @@ export default function FriendsPage() {
                 isLazy
                 colorScheme="themePurple"
                 mx="1"
-                mt="4"
                 className={styles.scroll}
             >
                 <Box width="100%" overflowX="auto" p={2}>

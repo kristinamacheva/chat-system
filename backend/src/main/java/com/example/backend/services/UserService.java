@@ -2,6 +2,7 @@ package com.example.backend.services;
 
 import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.ResponseUserDTO;
+import com.example.backend.dto.UserWithFriendshipStatusDTO;
 import com.example.backend.entities.User;
 import com.example.backend.exceptions.UserNotFoundException;
 import com.example.backend.exceptions.UserWithThisEmailAlreadyExistsException;
@@ -36,7 +37,7 @@ public class UserService {
         return UserMapper.toResponseDTO(userRepository.save(user));
     }
 
-    public Page<?> getAll(int id, String email, int page, int size) {
+    public Page<UserWithFriendshipStatusDTO> getAll(int id, String email, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> users = (email != null && !email.isBlank())
                 ? userRepository.findByEmailContainingIgnoreCaseAndIsActiveAndIdNot(email, ACTIVE, id, pageable)

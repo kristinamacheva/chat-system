@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface ChannelRepository extends JpaRepository<Channel, Integer> {
+
     @Query("""
     SELECT DISTINCT c FROM Channel c
     JOIN c.memberships m
@@ -19,6 +20,8 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
       AND c.isActive = 1
       AND m.isActive = 1
 """)
-    Page<Channel> findActiveChannelsForUser(@Param("userId") int userId, Pageable pageable);
+
+    Page<Channel> findActiveChannelsForUser(int userId, Pageable pageable);
+
     Optional<Channel> findByIdAndIsActive(int id, int isActive);
 }

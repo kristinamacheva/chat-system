@@ -39,6 +39,33 @@ export const addMember = async (channelId, userId, memberData) => {
     return result;
 };
 
+export const getAllMembers = async (channelId, page, params = {}) => {
+    Object.keys(params).forEach(
+        (key) => params[key] === "" && delete params[key]
+    );
+    const queryParams = new URLSearchParams({
+        page,
+        ...params, 
+    });
+    const url = `${baseUrl}/${channelId}/members?${queryParams.toString()}`;
+    const result = await request.get(url);
+    return result;
+};
+
+export const updateMember = async (channelId, userId, memberId, memberData) => {
+    const result = await request.put(
+        `${baseUrl}/${channelId}/members/${memberId}?userId=${userId}`,
+        memberData
+    );
+    return result;
+};
+
+export const removeMember = async (userId, memberId, channelId) => {
+    await request.remove(
+        `${baseUrl}/${channelId}/members/${memberId}?userId=${userId}`
+    );
+};
+
 export const remove = async (channelId, userId) => {
     await request.remove(`${baseUrl}/${channelId}?userId=${userId}`);
 };

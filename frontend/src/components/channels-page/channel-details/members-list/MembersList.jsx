@@ -1,6 +1,5 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import AuthContext from "../../../contexts/authContext";
-import * as userService from "../../../services/userService";
+import * as channelService from "../../../../services/channelService";
 import {
     Button,
     Flex,
@@ -12,68 +11,65 @@ import {
     Text,
     useToast,
 } from "@chakra-ui/react";
-import UsersListItem from "./users-list-item/UsersListItem";
+import { useParams } from "react-router-dom";
+import MembersListItem from "./members-list-item/MembersListItem";
+import AuthContext from "../../../../contexts/authContext";
 
-export default function UsersList() {
-    const [users, setUsers] = useState([]);
+export default function MembersList({ isOwner }) {
+    const [members, setMembers] = useState([]);
     const [emailSearchValue, setEmailSearchValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [index, setIndex] = useState(2); // Page index starts at 2
     const [hasMore, setHasMore] = useState(false);
     const toast = useToast();
-    const { id } = useContext(AuthContext);
+    const { id: currentUserId } = useContext(AuthContext);
     const loaderRef = useRef(null);
+    const { channelId } = useParams();
 
     useEffect(() => {
-        fetchUsers();
-    }, [id]);
+        fetchMembers();
+    }, [currentUserId, channelId]);
 
-    const fetchUsers = useCallback(
+    const fetchMembers = useCallback(
         async (reset = false) => {
             setIsLoading(true);
             try {
                 const { data, totalPages, currentPage } =
-                    await userService.getAll(1, {
+                    await channelService.getAllMembers(channelId, 1, {
                         email: emailSearchValue,
-                        userId: id,
                     });
-
-                setUsers(data);
+                setMembers(data);
                 setHasMore(totalPages > currentPage);
                 setIndex(2);
             } catch (error) {
                 toast({
                     title: "Error.",
-                    description: error.message || "Error loading users.",
+                    description: error.message || "Error loading members.",
                     status: "error",
                     duration: 5000,
                     isClosable: true,
                 });
             }
-
             setIsLoading(false);
         },
-        [id, emailSearchValue]
+        [currentUserId, channelId, emailSearchValue]
     );
 
-    const fetchMoreUsers = useCallback(async () => {
+    const fetchMoreMembers = useCallback(async () => {
         if (isLoading || !hasMore) return;
         setIsLoading(true);
 
         try {
-            const { data, totalPages, currentPage } = await userService.getAll(
-                index,
-                {
+            const { data, totalPages, currentPage } =
+                await channelService.getAllMembers(channelId, index, {
                     email: emailSearchValue,
-                    userId: id,
-                }
-            );
-            setUsers((state) => [...state, ...data]);
+                });
+            setMembers((state) => [...state, ...data]);
             setHasMore(totalPages > currentPage);
         } catch (error) {
             toast({
                 title: "Error.",
-                description: error.message || "Error loading users.",
+                description: error.message || "Error loading members.",
                 status: "error",
                 duration: 5000,
                 isClosable: true,
@@ -88,7 +84,7 @@ export default function UsersList() {
         const observer = new IntersectionObserver((entries) => {
             const target = entries[0];
             if (target.isIntersecting) {
-                fetchMoreUsers();
+                fetchMoreMembers();
             }
         });
 
@@ -101,7 +97,7 @@ export default function UsersList() {
                 observer.unobserve(loaderRef.current);
             }
         };
-    }, [fetchMoreUsers]);
+    }, [fetchMoreMembers]);
 
     const onChange = (e) => {
         setEmailSearchValue(e.target.value);
@@ -109,7 +105,7 @@ export default function UsersList() {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        fetchUsers();
+        fetchMembers();
     };
 
     return (
@@ -147,13 +143,18 @@ export default function UsersList() {
             </form>
 
             <Stack>
-                {Array.isArray(users) && users.length > 0 ? (
-                    users.map((user) => (
-                        <UsersListItem key={user.id} user={user} />
+                {Array.isArray(members) && members.length > 0 ? (
+                    members.map((member) => (
+                        <MembersListItem
+                            key={member.id}
+                            member={member}
+                            isOwner={isOwner}
+                            fetchMembers={fetchMembers}
+                        />
                     ))
                 ) : (
                     <Flex justifyContent="center" alignItems="center">
-                        <Text>No users found</Text>
+                        <Text>No members found</Text>
                     </Flex>
                 )}
             </Stack>

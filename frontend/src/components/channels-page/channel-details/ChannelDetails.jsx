@@ -1,7 +1,4 @@
 import {
-    Avatar,
-    AvatarGroup,
-    Box,
     Card,
     HStack,
     Heading,
@@ -20,6 +17,7 @@ import { HiUserAdd } from "react-icons/hi";
 import { FaPen, FaTrashCan } from "react-icons/fa6";
 import ChannelEdit from "./channel-edit/ChannelEdit";
 import ChannelAddUser from "./channel-add-user/ChannelAddUser";
+import MembersList from "./members-list/MembersList";
 
 export default function ChannelDetails() {
     const [channel, setChannel] = useState({});
@@ -44,7 +42,7 @@ export default function ChannelDetails() {
 
     useEffect(() => {
         fetchChannel();
-    }, [channelId]);
+    }, [currentUserId, channelId]);
 
     const fetchChannel = function () {
         setIsLoading(true);
@@ -156,6 +154,11 @@ export default function ChannelDetails() {
                     </HStack>
                 </HStack>
             </Card>
+            <Stack m="2" pt="4">
+                <MembersList
+                    isOwner={isOwner}
+                />
+            </Stack>
             {isEditModalOpen && (
                 <ChannelEdit
                     isOpen={isEditModalOpen}

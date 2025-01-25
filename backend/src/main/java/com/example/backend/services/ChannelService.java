@@ -104,12 +104,34 @@ public class ChannelService {
         return ChannelMapper.toChannelMemberDTO(userToAdd, userToAddRole);
     }
 
+    public ChannelMemberDTO updateMember(int channelId, int memberId, int userId, UpdateChannelMemberDTO updateChannelMemberDTO) {
+        validateOwnerRole(channelId, userId);
+        validateOwnerAction(memberId, userId, "change their own role");
+        ChannelMembership userMembership = getActiveMembershipByChannelAndUser(channelId, memberId);
+        Role userToUpdateRole = roleRepository.findByName(updateChannelMemberDTO.getRole())
+                .orElseThrow(() -> new RoleNotFoundException(updateChannelMemberDTO.getRole()));
+        userMembership.setRole(userToUpdateRole);
+        ChannelMembership updatedMembership = channelMembershipRepository.save(userMembership);
+        return ChannelMapper.toChannelMemberDTO(updatedMembership.getUser(), updatedMembership.getRole());
+    }
+
+    public Page<ChannelMemberDTO> getAllMembers(int channelId, String email, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ChannelMembership> memberships = channelMembershipRepository.findActiveMembershipsByChannelIdAndEmail(channelId, email, pageable);
+        return memberships.map(cm -> ChannelMapper.toChannelMemberDTO(cm.getUser(), cm.getRole()));
+    }
+
+    public void deleteMember(int channelId, int memberId, int userId) {
+        validateOwnerRole(channelId, userId);
+        validateOwnerAction(memberId, userId, "delete");
+        ChannelMembership userMembership = getActiveMembershipByChannelAndUser(channelId, memberId);
+        userMembership.setIsActive(INACTIVE);
+        channelMembershipRepository.save(userMembership);
+    }
+
     public void delete(int channelId,  int userId) {
         Channel channel = getActiveChannelById(channelId);
-        ChannelMembership membership = getActiveMembershipByChannelAndUser(channelId, userId);
-        if (!membership.getRole().getName().equals("OWNER")) {
-            throw new UnauthorizedAccessException();
-        }
+        validateOwnerRole(channelId, userId);
         channel.setIsActive(INACTIVE);
         channelRepository.save(channel);
     }
@@ -122,5 +144,19 @@ public class ChannelService {
     private ChannelMembership getActiveMembershipByChannelAndUser(int channelId, int userId) {
         return channelMembershipRepository.findByChannelIdAndUserIdAndIsActive(channelId, userId, ACTIVE)
                 .orElseThrow(() -> new MembershipNotFoundException(channelId, userId));
+    }
+
+    private void validateOwnerRole(int channelId, int userId) {
+        ChannelMembership requesterMembership = getActiveMembershipByChannelAndUser(channelId, userId);
+        Role requesterRole = requesterMembership.getRole();
+        if (!requesterRole.getName().equals("OWNER")) {
+            throw new UnauthorizedAccessException();
+        }
+    }
+
+    private void validateOwnerAction(int memberId, int userId, String action) {
+        if (memberId == userId) {
+            throw new InvalidActionException("Owner cannot " + action + " themselves.");
+        }
     }
 }

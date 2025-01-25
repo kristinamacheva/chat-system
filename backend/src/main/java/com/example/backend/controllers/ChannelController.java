@@ -2,8 +2,8 @@ package com.example.backend.controllers;
 
 import com.example.backend.dto.AddChannelMemberDTO;
 import com.example.backend.dto.CreateChannelDTO;
-import com.example.backend.dto.ResponseChannelDetailsDTO;
 import com.example.backend.dto.UpdateChannelDTO;
+import com.example.backend.dto.UpdateChannelMemberDTO;
 import com.example.backend.http.AppResponse;
 import com.example.backend.services.ChannelService;
 import jakarta.validation.Valid;
@@ -68,6 +68,22 @@ public class ChannelController {
                 .build();
     }
 
+    @GetMapping("/{channelId}/members")
+    public ResponseEntity<?> getAllMembers(
+            @PathVariable int channelId,
+            @RequestParam(name = "email", required = false) String email,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size
+    ) {
+        int pageIndex = page > 0 ? page - 1 : 0;
+        var result = channelService.getAllMembers(channelId, email, pageIndex, size);
+        return AppResponse.success()
+                .withMessage("Members found successfully")
+                .withData(result.getContent())
+                .withPagination(result)
+                .build();
+    }
+
     @PostMapping("/{channelId}/members")
     public ResponseEntity<?> addMember(
             @PathVariable int channelId,
@@ -78,6 +94,32 @@ public class ChannelController {
         return AppResponse.success()
                 .withMessage("Channel updated successfully")
                 .withData(result)
+                .build();
+    }
+
+    @PutMapping("/{channelId}/members/{memberId}")
+    public ResponseEntity<?> updateMember(
+            @PathVariable int channelId,
+            @PathVariable int memberId,
+            @RequestParam int userId,
+            @RequestBody @Valid UpdateChannelMemberDTO updateChannelMemberDTO
+    ) {
+        var result = channelService.updateMember(channelId, memberId, userId, updateChannelMemberDTO);
+        return AppResponse.success()
+                .withMessage("Member updated successfully")
+                .withData(result)
+                .build();
+    }
+
+    @DeleteMapping("/{channelId}/members/{memberId}")
+    public ResponseEntity<?> deleteMember(
+            @PathVariable int channelId,
+            @PathVariable int memberId,
+            @RequestParam int userId
+    ) {
+        channelService.deleteMember(channelId, memberId, userId);
+        return AppResponse.success()
+                .withMessage("Member deleted successfully")
                 .build();
     }
 

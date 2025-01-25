@@ -1,6 +1,9 @@
 package com.example.backend.repositories;
 
+import com.example.backend.dto.ChannelMemberDTO;
 import com.example.backend.entities.ChannelMembership;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,6 +14,7 @@ import java.util.Set;
 
 @Repository
 public interface ChannelMembershipRepository extends JpaRepository<ChannelMembership, Integer> {
+
     @Query("""
        SELECT m FROM ChannelMembership m
        JOIN m.user u
@@ -34,6 +38,20 @@ public interface ChannelMembershipRepository extends JpaRepository<ChannelMember
          AND r.name = 'ADMIN'
        """)
     Set<ChannelMembership> findAdminsByChannelId(@Param("channelId") int channelId);
+
+    @Query("SELECT cm FROM ChannelMembership cm " +
+            "JOIN FETCH cm.user u " +
+            "JOIN FETCH cm.role r " +
+            "WHERE cm.channel.id = :channelId " +
+            "AND cm.isActive = 1 " +
+            "AND (:email IS NULL OR LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%')))")
+    Page<ChannelMembership> findActiveMembershipsByChannelIdAndEmail(
+            int channelId,
+            String email,
+            Pageable pageable
+    );
+
     Optional<ChannelMembership> findByChannelIdAndUserIdAndIsActive(int channelId, int userId, int isActive);
+
     boolean existsByChannelIdAndUserIdAndIsActive(int channelId, int userId, int isActive);
 }
