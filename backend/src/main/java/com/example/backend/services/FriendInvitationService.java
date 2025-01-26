@@ -8,6 +8,7 @@ import com.example.backend.entities.User;
 import com.example.backend.exceptions.FriendInvitationAlreadyExistsException;
 import com.example.backend.exceptions.FriendInvitationNotFoundException;
 import com.example.backend.exceptions.FriendshipAlreadyExistsException;
+import com.example.backend.exceptions.InvalidActionException;
 import com.example.backend.mappers.FriendInvitationMapper;
 import com.example.backend.mappers.FriendshipMapper;
 import com.example.backend.repositories.FriendInvitationRepository;
@@ -37,6 +38,9 @@ public class FriendInvitationService {
     }
 
     public FriendInvitation createFriendInvitation(CreateFriendInvitationDTO createFriendInvitationDTO) {
+        if (createFriendInvitationDTO.getSenderId() == createFriendInvitationDTO.getRecipientId()) {
+            throw new InvalidActionException("You cannot send an invitation to yourself.");
+        }
         User sender = validateUserExistence(createFriendInvitationDTO.getSenderId());
         User recipient = validateUserExistence(createFriendInvitationDTO.getRecipientId());
         checkActiveFriendship(sender, recipient);

@@ -22,6 +22,13 @@ public class ChannelMapper {
         return responseChannelDTO;
     }
 
+    public static BasicChannelDTO toBasicChannelDTO(Channel channel) {
+        BasicChannelDTO basicChannelDTO = new BasicChannelDTO();
+        basicChannelDTO.setId(channel.getId());
+        basicChannelDTO.setName(channel.getName());
+        return basicChannelDTO;
+    }
+
     public static ResponseChannelDetailsDTO toResponseDetailsDTO(Channel channel, ResponseUserDTO owner, Set<ResponseUserDTO> admins) {
         ResponseChannelDetailsDTO responseChannelDetailsDTO = new ResponseChannelDetailsDTO();
         responseChannelDetailsDTO.setId(channel.getId());
