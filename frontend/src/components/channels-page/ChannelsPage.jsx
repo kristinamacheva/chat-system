@@ -8,6 +8,7 @@ import {
     useDisclosure,
     Card,
     useToast,
+    Spinner,
 } from "@chakra-ui/react";
 import ChannelCreate from "./channel-create/ChannelCreate";
 import * as channelService from "../../services/channelService";
@@ -25,7 +26,7 @@ export default function ChannelsPage() {
 
     useEffect(() => {
         fetchChannels();
-    }, [id]);
+    }, []);
 
     const fetchChannels = useCallback(
         async (reset = false) => {
@@ -114,12 +115,12 @@ export default function ChannelsPage() {
                 </Card>
                 <Stack mt="4">
                     {channels.map((channel) => (
-                        <ChannelListItem
-                            key={channel.id}
-                            channel={channel}
-                        />
+                        <ChannelListItem key={channel.id} channel={channel} />
                     ))}
                 </Stack>
+            </Stack>
+            <Stack ref={loaderRef} p="2">
+                {isLoading && <Spinner />}
             </Stack>
             {isCreateModalOpen && (
                 <ChannelCreate

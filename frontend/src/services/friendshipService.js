@@ -4,6 +4,6 @@ import * as request from "../lib/request";
 const baseUrl = `${API_BASE_URL}/friendships`;
 
 export const getAll = async (userId, page) => {
-    const result = await request.get(`${baseUrl}?userId=${userId}&page=${page}&size=10`);
+    const result = await request.get(`${baseUrl}?userId=${userId}&page=${page}&size=6`);
     return result;
 };

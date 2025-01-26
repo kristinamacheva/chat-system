@@ -13,7 +13,7 @@ export const create = async (userId, channelData) => {
 
 export const getAll = async (userId, page) => {
     const result = await request.get(
-        `${baseUrl}?userId=${userId}&page=${page}&size=10`
+        `${baseUrl}?userId=${userId}&page=${page}&size=6`
     );
     return result;
 };

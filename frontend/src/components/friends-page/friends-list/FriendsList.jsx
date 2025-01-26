@@ -15,7 +15,7 @@ export default function FriendsList() {
 
     useEffect(() => {
         fetchFriendItems();
-    }, [id]);
+    }, []);
 
     const fetchFriendItems = useCallback(
         async (reset = false) => {

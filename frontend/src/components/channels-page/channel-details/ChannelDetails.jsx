@@ -42,7 +42,7 @@ export default function ChannelDetails() {
 
     useEffect(() => {
         fetchChannel();
-    }, [currentUserId, channelId]);
+    }, [channelId]);
 
     const fetchChannel = function () {
         setIsLoading(true);

@@ -26,7 +26,7 @@ export default function UsersList() {
 
     useEffect(() => {
         fetchUsers();
-    }, [id]);
+    }, []);
 
     const fetchUsers = useCallback(
         async (reset = false) => {
