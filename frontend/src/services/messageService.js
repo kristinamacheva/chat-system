@@ -10,3 +10,21 @@ export const createChannelMessage = async (senderId, channelId, messageData) => 
 export const createFriendMessage = async (senderId, recipientId, messageData) => {
     await request.post(`${baseUrl}/friends/${recipientId}?userId=${senderId}`, messageData);
 };
+
+export const getAllFriendMessages = async (userId, friendId, lastMessageId = null) => {
+    let url = `${baseUrl}/friends/${friendId}?userId=${userId}`;
+    if (lastMessageId) {
+        url += `&lastMessageId=${lastMessageId}`;
+    } 
+    const result = await request.get(url);
+    return result;
+};
+
+export const getAllChannelMessages = async (userId, channelId, lastMessageId = null) => {
+    let url = `${baseUrl}/channels/${channelId}?userId=${userId}`;
+    if (lastMessageId) {
+        url += `&lastMessageId=${lastMessageId}`;
+    } 
+    const result = await request.get(url);
+    return result;
+};

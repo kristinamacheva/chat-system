@@ -30,6 +30,20 @@ public class MessageController {
                 .build();
     }
 
+    @GetMapping("/friends/{friendId}")
+    public ResponseEntity<?> getAllFriendMessages(
+            @PathVariable int friendId,
+            @RequestParam(name = "userId") int userId,
+            @RequestParam(name = "lastMessageId", required = false) Integer lastMessageId,
+            @RequestParam(name = "size", defaultValue = "20") int size
+    ) {
+        var result = messageService.getAllFriendMessages(userId, friendId, lastMessageId, size);
+        return AppResponse.success()
+                .withMessage("Friend messages fetched successfully")
+                .withData(result)
+                .build();
+    }
+
     @PostMapping("/channels/{channelId}")
     public ResponseEntity<?> createChannelMessage(
             @PathVariable int channelId,
@@ -42,4 +56,17 @@ public class MessageController {
                 .build();
     }
 
+    @GetMapping("/channels/{channelId}")
+    public ResponseEntity<?> getAllChannelMessages(
+            @PathVariable int channelId,
+            @RequestParam(name = "userId") int userId,
+            @RequestParam(name = "lastMessageId", required = false) Integer lastMessageId,
+            @RequestParam(name = "size", defaultValue = "20") int size
+    ) {
+        var result = messageService.getAllChannelMessages(userId, channelId, lastMessageId, size);
+        return AppResponse.success()
+                .withMessage("Channel messages fetched successfully")
+                .withData(result)
+                .build();
+    }
 }

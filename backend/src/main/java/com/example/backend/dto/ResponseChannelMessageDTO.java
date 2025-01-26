@@ -13,7 +13,6 @@ public class ResponseChannelMessageDTO {
 
     private int id;
     private BasicUserDTO sender;
-    private BasicChannelDTO channel;
     private String content;
     private LocalDateTime createdAt;
 }

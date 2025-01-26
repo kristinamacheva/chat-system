@@ -13,7 +13,6 @@ public class ResponseFriendMessageDTO {
 
     private int id;
     private BasicUserDTO sender;
-    private BasicUserDTO recipient;
     private String content;
     private LocalDateTime createdAt;
 }

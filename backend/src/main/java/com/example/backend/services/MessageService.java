@@ -1,16 +1,23 @@
 package com.example.backend.services;
 
-import com.example.backend.dto.CreateChannelMessageDTO;
-import com.example.backend.dto.CreateFriendMessageDTO;
-import com.example.backend.dto.ResponseChannelMessageDTO;
-import com.example.backend.dto.ResponseFriendMessageDTO;
+import com.example.backend.dto.*;
 import com.example.backend.entities.Channel;
+import com.example.backend.entities.FriendInvitation;
 import com.example.backend.entities.Message;
 import com.example.backend.entities.User;
 import com.example.backend.exceptions.*;
+import com.example.backend.mappers.FriendInvitationMapper;
 import com.example.backend.mappers.MessageMapper;
 import com.example.backend.repositories.*;
+import com.example.backend.utils.Status;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.backend.utils.Status.ACTIVE;
 
@@ -44,6 +51,15 @@ public class MessageService {
         return MessageMapper.toResponseFriendMessageDTO(messageRepository.save(message));
     }
 
+    public List<ResponseFriendMessageDTO> getAllFriendMessages(int userId, int friendId, Integer lastMessageId, int size) {
+        Pageable pageable = PageRequest.of(0, size);
+        List<Message> messages =  messageRepository.findAllFriendMessagesWithCursor(userId, friendId, lastMessageId, pageable);
+        Collections.reverse(messages);
+        return messages.stream()
+                .map(MessageMapper::toResponseFriendMessageDTO)
+                .toList();
+    }
+
     public ResponseChannelMessageDTO createChannelMessage(CreateChannelMessageDTO createChannelMessageDTO, int senderId, int channelId) {
         User sender = getActiveUserById(senderId);
         Channel senderChannel = getActiveChannelById(channelId);
@@ -52,6 +68,15 @@ public class MessageService {
         }
         Message message = MessageMapper.toEntity(createChannelMessageDTO, sender, senderChannel);
         return MessageMapper.toResponseChannelMessageDTO(messageRepository.save(message));
+    }
+
+    public List<ResponseChannelMessageDTO> getAllChannelMessages(int userId, int channelId, Integer lastMessageId, int size) {
+        Pageable pageable = PageRequest.of(0, size);
+        List<Message> messages =  messageRepository.findAllChannelMessagesWithCursor(channelId, lastMessageId, pageable);
+        Collections.reverse(messages);
+        return messages.stream()
+                .map(MessageMapper::toResponseChannelMessageDTO)
+                .toList();
     }
 
     private User getActiveUserById(int userId) {

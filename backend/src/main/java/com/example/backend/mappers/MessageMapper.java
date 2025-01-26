@@ -33,7 +33,6 @@ public class MessageMapper {
         responseDTO.setContent(message.getContent());
         responseDTO.setCreatedAt(message.getCreatedAt());
         responseDTO.setSender(UserMapper.toBasicUserDTO(message.getSender()));
-        responseDTO.setChannel(ChannelMapper.toBasicChannelDTO(message.getChannel()));
         return responseDTO;
     }
 
@@ -43,7 +42,6 @@ public class MessageMapper {
         responseDTO.setContent(message.getContent());
         responseDTO.setCreatedAt(message.getCreatedAt());
         responseDTO.setSender(UserMapper.toBasicUserDTO(message.getSender()));
-        responseDTO.setRecipient(UserMapper.toBasicUserDTO(message.getRecipient()));
         return responseDTO;
     }
 }
