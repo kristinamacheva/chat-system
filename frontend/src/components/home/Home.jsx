@@ -3,7 +3,8 @@ import * as friendshipService from "../../services/friendshipService";
 import * as channelService from "../../services/channelService";
 import AuthContext from "../../contexts/authContext";
 import Sidebar from "./sidebar/Sidebar";
-import { useToast } from "@chakra-ui/react";
+import { HStack, useToast } from "@chakra-ui/react";
+import Chat from "./chat/Chat";
 
 export default function Home() {
     const { id: currentUserId } = useContext(AuthContext);
@@ -13,8 +14,10 @@ export default function Home() {
     const [hasMoreFriends, setHasMoreFriends] = useState(true);
     const [isChannelsLoading, setIsChannelsLoading] = useState(false);
     const [isFriendsLoading, setIsFriendsLoading] = useState(false);
-    const channelPageRef = useRef(1); 
-    const friendPageRef = useRef(1); 
+    const channelPageRef = useRef(1);
+    const friendPageRef = useRef(1);
+    const [selectedChannel, setSelectedChannel] = useState(null);
+    const [selectedFriend, setSelectedFriend] = useState(null);
     const toast = useToast();
 
     useEffect(() => {
@@ -28,11 +31,14 @@ export default function Home() {
         setIsChannelsLoading(true);
         try {
             const { data, totalPages, currentPage } =
-                await channelService.getAll(currentUserId, channelPageRef.current);
+                await channelService.getAll(
+                    currentUserId,
+                    channelPageRef.current
+                );
 
             setChannels((state) => [...state, ...data]);
             setHasMoreChannels(currentPage < totalPages);
-            channelPageRef.current += 1; 
+            channelPageRef.current += 1;
         } catch (error) {
             toast({
                 title: "Error.",
@@ -52,7 +58,10 @@ export default function Home() {
         setIsFriendsLoading(true);
         try {
             const { data, totalPages, currentPage } =
-                await friendshipService.getAll(currentUserId, friendPageRef.current);
+                await friendshipService.getAll(
+                    currentUserId,
+                    friendPageRef.current
+                );
 
             setFriends((state) => [...state, ...data]);
             setHasMoreFriends(currentPage < totalPages);
@@ -70,14 +79,34 @@ export default function Home() {
         }
     };
 
+    const handleChannelClick = (channel) => {
+        setSelectedChannel(channel);
+        setSelectedFriend(null);
+    };
+
+    const handleFriendClick = (friend) => {
+        setSelectedFriend(friend);
+        setSelectedChannel(null);
+    };
+
     return (
-        <Sidebar
-            channels={channels}
-            friends={friends}
-            fetchMoreChannels={fetchChannels}
-            fetchMoreFriends={fetchFriends}
-            hasMoreChannels={hasMoreChannels}
-            hasMoreFriends={hasMoreFriends}
-        />
+        <HStack>
+            <Sidebar
+                channels={channels}
+                friends={friends}
+                fetchMoreChannels={fetchChannels}
+                fetchMoreFriends={fetchFriends}
+                hasMoreChannels={hasMoreChannels}
+                hasMoreFriends={hasMoreFriends}
+                onChannelClick={handleChannelClick}  
+                onFriendClick={handleFriendClick}
+            />
+            {(selectedChannel || selectedFriend) && (
+                <Chat
+                    selectedChannel={selectedChannel}
+                    selectedFriend={selectedFriend}
+                />
+            )}
+        </HStack>
     );
 }

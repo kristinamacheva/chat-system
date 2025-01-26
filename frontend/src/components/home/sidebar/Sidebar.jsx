@@ -9,6 +9,8 @@ export default function Sidebar({
     fetchMoreFriends,
     hasMoreChannels,
     hasMoreFriends,
+    onChannelClick,
+    onFriendClick,
 }) {
     const channelLoaderRef = useRef(null);
     const friendLoaderRef = useRef(null);
@@ -77,6 +79,7 @@ export default function Sidebar({
                             w="full"
                             variant="ghost"
                             justifyContent="flex-start"
+                            onClick={() => onChannelClick(channel)}
                         >
                             {channel.name}
                         </Button>
@@ -113,6 +116,7 @@ export default function Sidebar({
                             w="full"
                             variant="ghost"
                             justifyContent="flex-start"
+                            onClick={() => onFriendClick(friend)}
                         >
                             {friend.fullName}
                         </Button>
