@@ -125,6 +125,7 @@ public class ChannelService {
         validateOwnerRole(channelId, userId);
         validateOwnerAction(memberId, userId, "delete");
         ChannelMembership userMembership = getActiveMembershipByChannelAndUser(channelId, memberId);
+        validateGuestRole(userMembership);
         userMembership.setIsActive(INACTIVE);
         channelMembershipRepository.save(userMembership);
     }
@@ -157,6 +158,13 @@ public class ChannelService {
     private void validateOwnerAction(int memberId, int userId, String action) {
         if (memberId == userId) {
             throw new InvalidActionException("Owner cannot " + action + " themselves.");
+        }
+    }
+
+    private void validateGuestRole(ChannelMembership membership) {
+        Role memberRole = membership.getRole();
+        if (!memberRole.getName().equals("GUEST")) {
+            throw new InvalidActionException("Only users with the GUEST role can be deleted.");
         }
     }
 }
