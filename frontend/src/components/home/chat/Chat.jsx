@@ -94,6 +94,13 @@ export default function Chat({ selectedChannel, selectedFriend }) {
         isChannelChat,
     ]);
 
+    const sendMessageHandler = (newMessage) => {
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            newMessage
+        ]);
+    }
+
     return (
         <Flex
             flex="70"
@@ -172,6 +179,7 @@ export default function Chat({ selectedChannel, selectedFriend }) {
             <MessageInput
                 selectedChannel={selectedChannel}
                 selectedFriend={selectedFriend}
+                sendMessageHandler={sendMessageHandler}
             />
         </Flex>
     );

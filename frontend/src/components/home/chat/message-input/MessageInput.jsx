@@ -10,7 +10,11 @@ import { IoSendSharp } from "react-icons/io5";
 import AuthContext from "../../../../contexts/authContext";
 import * as messageService from "../../../../services/messageService";
 
-export default function MessageInput({ selectedChannel, selectedFriend }) {
+export default function MessageInput({
+    selectedChannel,
+    selectedFriend,
+    sendMessageHandler,
+}) {
     const [messageText, setMessageText] = useState("");
     const { id: senderId } = useContext(AuthContext);
     const toast = useToast();
@@ -21,19 +25,21 @@ export default function MessageInput({ selectedChannel, selectedFriend }) {
         const messageData = {
             content: messageText,
         };
-        
+
+        let result;
         try {
             selectedChannel
-                ? await messageService.createChannelMessage(
+                ? (result = await messageService.createChannelMessage(
                       senderId,
                       selectedChannel.id,
                       messageData
-                  )
-                : await messageService.createFriendMessage(
+                  ))
+                : (result = await messageService.createFriendMessage(
                       senderId,
                       selectedFriend.id,
                       messageData
-                  );
+                  ));
+            sendMessageHandler(result.data);
             setMessageText("");
         } catch (error) {
             toast({

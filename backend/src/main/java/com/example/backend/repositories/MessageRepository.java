@@ -24,6 +24,4 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
             "   AND (:lastMessageId IS NULL OR m.id < :lastMessageId) " +
             "ORDER BY m.createdAt DESC")
     List<Message> findAllChannelMessagesWithCursor(int channelId, Integer lastMessageId, Pageable pageable);
-
-
 }
