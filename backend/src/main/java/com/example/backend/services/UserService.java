@@ -28,6 +28,12 @@ public class UserService {
         this.friendshipRepository = friendshipRepository;
     }
 
+    /**
+     * Registers a new user by saving them to the database after validating the email.
+     *
+     * @param createUserDTO The DTO containing the user details for registration.
+     * @return ResponseUserDTO containing the user details.
+     */
     public ResponseUserDTO register(CreateUserDTO createUserDTO) {
         if (userRepository.existsByEmail(createUserDTO.getEmail())) {
             throw new UserWithThisEmailAlreadyExistsException(createUserDTO.getEmail());
@@ -37,17 +43,32 @@ public class UserService {
         return UserMapper.toResponseDTO(userRepository.save(user));
     }
 
-    public Page<UserWithFriendshipStatusDTO> getAll(int id, String email, int page, int size) {
+    /**
+     * Retrieves a paginated list of users, excluding the user with the specified ID and checks if they are friends.
+     *
+     * @param userId The ID of the requesting user to exclude from the result.
+     * @param email Optional filter for users by email.
+     * @param page The page number for pagination.
+     * @param size The size of each page for pagination.
+     * @return A page of users with their friendship status.
+     */
+    public Page<UserWithFriendshipStatusDTO> getAll(int userId, String email, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> users = (email != null && !email.isBlank())
-                ? userRepository.findByEmailContainingIgnoreCaseAndIsActiveAndIdNot(email, ACTIVE, id, pageable)
-                : userRepository.findByIsActiveAndIdNot(ACTIVE, id, pageable);
+                ? userRepository.findByEmailContainingIgnoreCaseAndIsActiveAndIdNot(email, ACTIVE, userId, pageable)
+                : userRepository.findByIsActiveAndIdNot(ACTIVE, userId, pageable);
         return users.map(user -> {
-            boolean isFriend = friendshipRepository.existsActiveFriendship(id, user.getId());
+            boolean isFriend = friendshipRepository.existsActiveFriendship(userId, user.getId());
             return UserMapper.toUserWithFriendshipStatusDTO(user, isFriend);
         });
     }
 
+    /**
+     * Retrieves the details of a specific user by their ID.
+     *
+     * @param id The ID of the user to retrieve.
+     * @return ResponseUserDTO containing the user details.
+     */
     public ResponseUserDTO getOne(int id) {
         User user = userRepository.findByIdAndIsActive(id, ACTIVE)
                 .orElseThrow(UserNotFoundException::new);

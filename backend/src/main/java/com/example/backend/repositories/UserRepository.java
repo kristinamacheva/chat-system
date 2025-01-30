@@ -21,5 +21,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Page<User> findByIsActiveAndIdNot(int isActive, int id, Pageable pageable);
 
-    Page<User> findByEmailContainingIgnoreCaseAndIsActiveAndIdNot(String email, int isActive, int id, Pageable pageable);
+    Page<User> findByEmailContainingIgnoreCaseAndIsActiveAndIdNot(String email, int isActive, int userId, Pageable pageable);
 }

@@ -18,6 +18,14 @@ public class FriendshipService {
         this.friendshipRepository = friendshipRepository;
     }
 
+    /**
+     * Retrieves a paginated list of friends for a given user.
+     *
+     * @param userId the ID of the user whose friends are being retrieved
+     * @param page the page number for pagination
+     * @param size the number of results per page
+     * @return a paginated list of friends as ResponseUserDTO objects
+     */
     public Page<ResponseUserDTO> getAllFriends(int userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> users = friendshipRepository.findFriendsByUserId(userId, pageable);

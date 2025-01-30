@@ -33,6 +33,14 @@ public class MessageService {
         this.channelMembershipRepository = channelMembershipRepository;
     }
 
+    /**
+     * Creates a direct message between two friends.
+     *
+     * @param createFriendMessageDTO the data transfer object containing message details
+     * @param senderId the ID of the sender
+     * @param recipientId the ID of the recipient
+     * @return the created message as a ResponseFriendMessageDTO
+     */
     public ResponseFriendMessageDTO createFriendMessage(CreateFriendMessageDTO createFriendMessageDTO, int senderId, int recipientId) {
         if (senderId == recipientId) {
             throw new InvalidActionException("You cannot send messages to yourself.");
@@ -46,6 +54,15 @@ public class MessageService {
         return MessageMapper.toResponseFriendMessageDTO(messageRepository.save(message));
     }
 
+    /**
+     * Retrieves a list of direct messages between a user and a friend.
+     *
+     * @param userId the ID of the user
+     * @param friendId the ID of the friend
+     * @param lastMessageId the ID of the last message retrieved (for pagination)
+     * @param size the number of messages to retrieve
+     * @return a list of messages as ResponseFriendMessageDTO
+     */
     public List<ResponseFriendMessageDTO> getAllFriendMessages(int userId, int friendId, Integer lastMessageId, int size) {
         Pageable pageable = PageRequest.of(0, size);
         List<Message> messages =  messageRepository.findAllFriendMessagesWithCursor(userId, friendId, lastMessageId, pageable);
@@ -55,6 +72,14 @@ public class MessageService {
                 .toList();
     }
 
+    /**
+     * Creates a message within a channel.
+     *
+     * @param createChannelMessageDTO the data transfer object containing message details
+     * @param senderId the ID of the sender
+     * @param channelId the ID of the channel
+     * @return the created message as a ResponseChannelMessageDTO
+     */
     public ResponseChannelMessageDTO createChannelMessage(CreateChannelMessageDTO createChannelMessageDTO, int senderId, int channelId) {
         User sender = getActiveUserById(senderId);
         Channel senderChannel = getActiveChannelById(channelId);
@@ -65,6 +90,15 @@ public class MessageService {
         return MessageMapper.toResponseChannelMessageDTO(messageRepository.save(message));
     }
 
+    /**
+     * Retrieves a list of messages from a channel.
+     *
+     * @param userId the ID of the user requesting messages
+     * @param channelId the ID of the channel
+     * @param lastMessageId the ID of the last message retrieved (for pagination)
+     * @param size the number of messages to retrieve
+     * @return a list of messages as ResponseChannelMessageDTO
+     */
     public List<ResponseChannelMessageDTO> getAllChannelMessages(int userId, int channelId, Integer lastMessageId, int size) {
         if (!channelMembershipRepository.existsByChannelIdAndUserIdAndIsActive(channelId, userId, ACTIVE)) {
             throw new UnauthorizedAccessException();

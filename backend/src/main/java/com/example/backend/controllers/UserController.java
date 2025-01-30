@@ -31,13 +31,13 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getAll(
-            @RequestParam(name = "userId") int id,
+            @RequestParam(name = "userId") int userId,
             @RequestParam(name = "email", required = false) String email,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size
     ) {
         int pageIndex = page > 0 ? page - 1 : 0;
-        var result = userService.getAll(id, email, pageIndex, size);
+        var result = userService.getAll(userId, email, pageIndex, size);
         return AppResponse.success()
                 .withMessage("Users found successfully")
                 .withData(result.getContent())
