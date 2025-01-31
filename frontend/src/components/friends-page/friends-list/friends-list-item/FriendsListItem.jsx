@@ -10,7 +10,7 @@ export default function FriendsListItem({ id, fullName, email }) {
             background="white"
             spacing="4"
             justifyContent="center"
-            width="320px"
+            width="460px"
             height="100px"
         >
             <Stack

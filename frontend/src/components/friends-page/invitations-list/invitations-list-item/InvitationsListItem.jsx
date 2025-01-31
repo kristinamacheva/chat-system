@@ -12,6 +12,8 @@ import { FaEnvelope } from "react-icons/fa";
 import * as friendInvitationService from "../../../../services/friendInvitationService";
 import { FaCircleCheck, FaCircleXmark } from "react-icons/fa6";
 import { BsCalendar2DateFill } from "react-icons/bs";
+import AuthContext from "../../../../contexts/authContext";
+import { useContext } from "react";
 
 export default function InvitationsListItem({
     id,
@@ -20,11 +22,12 @@ export default function InvitationsListItem({
     userEmail,
     invitationDate,
 }) {
+    const { id: userId } = useContext(AuthContext);
     const toast = useToast();
 
     const invitationAcceptHandler = async (id) => {
         try {
-            await friendInvitationService.accept(id);
+            await friendInvitationService.accept(userId, id);
             toast({
                 title: "Invitation accepted successfully",
                 status: "success",
@@ -46,7 +49,7 @@ export default function InvitationsListItem({
 
     const invitationDeclineHandler = async (id) => {
         try {
-            await friendInvitationService.decline(id);
+            await friendInvitationService.decline(userId, id);
             toast({
                 title: "Invitation declined successfully",
                 status: "success",

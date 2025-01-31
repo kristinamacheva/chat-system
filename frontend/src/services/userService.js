@@ -14,6 +14,7 @@ export const getAll = async (page, params = {}) => {
     );
     const queryParams = new URLSearchParams({
         page,
+        size: 6,
         ...params, 
     });
 

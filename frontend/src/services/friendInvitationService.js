@@ -11,13 +11,13 @@ export const getAll = async (recipientId, page) => {
 };
 
 export const create = async (senderId, recipientId) => {
-    await request.post(`${baseUrl}`, { senderId, recipientId });
+    await request.post(`${baseUrl}?userId=${senderId}`, { recipientId });
 };
 
-export const accept = async (invitationId) => {
-    await request.put(`${baseUrl}/${invitationId}/accept`);
+export const accept = async (userId, invitationId) => {
+    await request.put(`${baseUrl}/${invitationId}/accept?userId=${userId}`);
 };
 
-export const decline = async (invitationId) => {
-    await request.put(`${baseUrl}/${invitationId}/decline`);
+export const decline = async (userId, invitationId) => {
+    await request.put(`${baseUrl}/${invitationId}/decline?userId=${userId}`);
 };

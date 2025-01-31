@@ -47,7 +47,7 @@ export default function UsersListItem({ user }) {
             background="white"
             spacing="4"
             justifyContent="center"
-            width="460px"
+            width="624px"
             height="100px"
         >
             <Stack

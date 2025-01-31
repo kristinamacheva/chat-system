@@ -66,7 +66,7 @@ export default function MembersListItem({ member, isOwner, fetchMembers }) {
                 background="white"
                 spacing="4"
                 justifyContent="center"
-                width="460px"
+                width="642px"
                 height="100px"
             >
                 <Stack
