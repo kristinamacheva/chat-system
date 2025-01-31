@@ -54,7 +54,7 @@ public class ChannelService {
      * @return The created channel as a DTO.
      */
     @Transactional
-    public ResponseChannelDTO create(CreateChannelDTO createChannelDTO, int userId) {
+    public ResponseChannelDTO create(CreateChannelDTO createChannelDTO, Integer userId) {
         Channel channel = ChannelMapper.toEntity(createChannelDTO);
         Channel savedChannel = channelRepository.save(channel);
         User user = userRepository.findByIdAndIsActive(userId, ACTIVE)
@@ -74,7 +74,7 @@ public class ChannelService {
      * @param size The number of items per page.
      * @return A paginated list of channels.
      */
-    public Page<ResponseChannelDTO> getAll(int userId, int page, int size) {
+    public Page<ResponseChannelDTO> getAll(Integer userId, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Channel> channels = channelRepository.findActiveChannelsForUser(userId, pageable);
         return channels.map(ChannelMapper::toResponseDTO);
@@ -86,7 +86,7 @@ public class ChannelService {
      * @param channelId The ID of the channel.
      * @return The channel details as a DTO.
      */
-    public ResponseChannelDetailsDTO getOne(int channelId) {
+    public ResponseChannelDetailsDTO getOne(Integer channelId) {
         Channel channel = getActiveChannelById(channelId);
         ChannelMembership ownerMembership = channelMembershipRepository.findOwnerByChannelId(channelId)
                 .orElseThrow(() -> new OwnerNotFoundException(channelId));
@@ -106,7 +106,7 @@ public class ChannelService {
      * @param userId The ID of the user performing the update.
      * @return The updated channel as a DTO.
      */
-    public ResponseChannelDTO update(int channelId, UpdateChannelDTO updateChannelDTO, int userId) {
+    public ResponseChannelDTO update(Integer channelId, UpdateChannelDTO updateChannelDTO, Integer userId) {
         Channel channel = getActiveChannelById(channelId);
         ChannelMembership membership  = getActiveMembershipByChannelAndUser(channelId, userId);
         if (!(membership.getRole().getName().equals("ADMIN") || membership.getRole().getName().equals("OWNER"))) {
@@ -124,7 +124,7 @@ public class ChannelService {
      * @param userId the ID of the requesting user
      * @return the added channel member as a DTO
      */
-    public ChannelMemberDTO addMember(int channelId, AddChannelMemberDTO addChannelMemberDTO, int userId) {
+    public ChannelMemberDTO addMember(Integer channelId, AddChannelMemberDTO addChannelMemberDTO, Integer userId) {
         Channel channel = getActiveChannelById(channelId);
         ChannelMembership requesterMembership = getActiveMembershipByChannelAndUser(channelId, userId);
         Role requesterRole = requesterMembership.getRole();
@@ -153,7 +153,7 @@ public class ChannelService {
      * @param updateChannelMemberDTO the data for updating the member's role
      * @return the updated channel member as a DTO
      */
-    public ChannelMemberDTO updateMember(int channelId, int memberId, int userId, UpdateChannelMemberDTO updateChannelMemberDTO) {
+    public ChannelMemberDTO updateMember(Integer channelId, Integer memberId, Integer userId, UpdateChannelMemberDTO updateChannelMemberDTO) {
         validateOwnerRole(channelId, userId);
         validateOwnerAction(memberId, userId, "change their own role");
         ChannelMembership userMembership = getActiveMembershipByChannelAndUser(channelId, memberId);
@@ -173,7 +173,7 @@ public class ChannelService {
      * @param size the number of results per page
      * @return a paginated list of channel members as DTOs
      */
-    public Page<ChannelMemberDTO> getAllMembers(int channelId, String email, int page, int size) {
+    public Page<ChannelMemberDTO> getAllMembers(Integer channelId, String email, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ChannelMembership> memberships = channelMembershipRepository.findActiveMembershipsByChannelIdAndEmail(channelId, email, pageable);
         return memberships.map(cm -> ChannelMapper.toChannelMemberDTO(cm.getUser(), cm.getRole()));
@@ -186,7 +186,7 @@ public class ChannelService {
      * @param memberId the ID of the member to remove
      * @param userId the ID of the requesting user
      */
-    public void deleteMember(int channelId, int memberId, int userId) {
+    public void deleteMember(Integer channelId, Integer memberId, Integer userId) {
         validateOwnerRole(channelId, userId);
         validateOwnerAction(memberId, userId, "delete");
         ChannelMembership userMembership = getActiveMembershipByChannelAndUser(channelId, memberId);
@@ -201,24 +201,24 @@ public class ChannelService {
      * @param channelId the ID of the channel to delete
      * @param userId the ID of the requesting user
      */
-    public void delete(int channelId,  int userId) {
+    public void delete(Integer channelId,  Integer userId) {
         Channel channel = getActiveChannelById(channelId);
         validateOwnerRole(channelId, userId);
         channel.setIsActive(INACTIVE);
         channelRepository.save(channel);
     }
 
-    private Channel getActiveChannelById(int channelId) {
+    private Channel getActiveChannelById(Integer channelId) {
         return channelRepository.findByIdAndIsActive(channelId, ACTIVE)
                 .orElseThrow(() -> new ChannelNotFoundException(channelId));
     }
 
-    private ChannelMembership getActiveMembershipByChannelAndUser(int channelId, int userId) {
+    private ChannelMembership getActiveMembershipByChannelAndUser(Integer channelId, Integer userId) {
         return channelMembershipRepository.findByChannelIdAndUserIdAndIsActive(channelId, userId, ACTIVE)
                 .orElseThrow(() -> new MembershipNotFoundException(channelId, userId));
     }
 
-    private void validateOwnerRole(int channelId, int userId) {
+    private void validateOwnerRole(Integer channelId, Integer userId) {
         ChannelMembership requesterMembership = getActiveMembershipByChannelAndUser(channelId, userId);
         Role requesterRole = requesterMembership.getRole();
         if (!requesterRole.getName().equals("OWNER")) {
@@ -226,7 +226,7 @@ public class ChannelService {
         }
     }
 
-    private void validateOwnerAction(int memberId, int userId, String action) {
+    private void validateOwnerAction(Integer memberId, Integer userId, String action) {
         if (memberId == userId) {
             throw new InvalidActionException("Owner cannot " + action + " themselves.");
         }

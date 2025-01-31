@@ -52,7 +52,7 @@ public class UserService {
      * @param size The size of each page for pagination.
      * @return A page of users with their friendship status.
      */
-    public Page<UserWithFriendshipStatusDTO> getAll(int userId, String email, int page, int size) {
+    public Page<UserWithFriendshipStatusDTO> getAll(Integer userId, String email, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> users = (email != null && !email.isBlank())
                 ? userRepository.findByEmailContainingIgnoreCaseAndIsActiveAndIdNot(email, ACTIVE, userId, pageable)
@@ -69,7 +69,7 @@ public class UserService {
      * @param id The ID of the user to retrieve.
      * @return ResponseUserDTO containing the user details.
      */
-    public ResponseUserDTO getOne(int id) {
+    public ResponseUserDTO getOne(Integer id) {
         User user = userRepository.findByIdAndIsActive(id, ACTIVE)
                 .orElseThrow(UserNotFoundException::new);
         return UserMapper.toResponseDTO(user);

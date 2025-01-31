@@ -22,9 +22,9 @@ public class ChannelController {
 
     @GetMapping
     public ResponseEntity<?> getAll(
-            @RequestParam(name = "userId") int userId,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "20") int size
+            @RequestParam(name = "userId") Integer userId,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "size", defaultValue = "20") Integer size
     ) {
         int pageIndex = page > 0 ? page - 1 : 0;
         var result = channelService.getAll(userId, pageIndex, size);
@@ -37,7 +37,7 @@ public class ChannelController {
 
     @PostMapping
     public ResponseEntity<?> create(
-            @RequestParam(name = "userId") int userId,
+            @RequestParam(name = "userId") Integer userId,
             @RequestBody @Valid CreateChannelDTO createChannelDTO) {
         var result = channelService.create(createChannelDTO, userId);
         return AppResponse.success()
@@ -47,7 +47,7 @@ public class ChannelController {
     }
 
     @GetMapping("/{channelId}")
-    public ResponseEntity<?> getChannel(@PathVariable int channelId) {
+    public ResponseEntity<?> getChannel(@PathVariable Integer channelId) {
         var result = channelService.getOne(channelId);
         return AppResponse.success()
                 .withMessage("Channel found successfully")
@@ -57,8 +57,8 @@ public class ChannelController {
 
     @PutMapping("/{channelId}")
     public ResponseEntity<?> update(
-            @PathVariable int channelId,
-            @RequestParam(name = "userId") int userId,
+            @PathVariable Integer channelId,
+            @RequestParam(name = "userId") Integer userId,
             @RequestBody @Valid UpdateChannelDTO updateChannelDTO
     ) {
         var result = channelService.update(channelId, updateChannelDTO, userId);
@@ -70,10 +70,10 @@ public class ChannelController {
 
     @GetMapping("/{channelId}/members")
     public ResponseEntity<?> getAllMembers(
-            @PathVariable int channelId,
+            @PathVariable Integer channelId,
             @RequestParam(name = "email", required = false) String email,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "20") int size
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "size", defaultValue = "20") Integer size
     ) {
         int pageIndex = page > 0 ? page - 1 : 0;
         var result = channelService.getAllMembers(channelId, email, pageIndex, size);
@@ -86,9 +86,9 @@ public class ChannelController {
 
     @PostMapping("/{channelId}/members")
     public ResponseEntity<?> addMember(
-            @PathVariable int channelId,
+            @PathVariable Integer channelId,
             @RequestBody @Valid AddChannelMemberDTO addChannelMemberDTO,
-            @RequestParam int userId
+            @RequestParam Integer userId
     ) {
         var result = channelService.addMember(channelId, addChannelMemberDTO, userId);
         return AppResponse.success()
@@ -99,9 +99,9 @@ public class ChannelController {
 
     @PutMapping("/{channelId}/members/{memberId}")
     public ResponseEntity<?> updateMember(
-            @PathVariable int channelId,
-            @PathVariable int memberId,
-            @RequestParam int userId,
+            @PathVariable Integer channelId,
+            @PathVariable Integer memberId,
+            @RequestParam Integer userId,
             @RequestBody @Valid UpdateChannelMemberDTO updateChannelMemberDTO
     ) {
         var result = channelService.updateMember(channelId, memberId, userId, updateChannelMemberDTO);
@@ -113,9 +113,9 @@ public class ChannelController {
 
     @DeleteMapping("/{channelId}/members/{memberId}")
     public ResponseEntity<?> deleteMember(
-            @PathVariable int channelId,
-            @PathVariable int memberId,
-            @RequestParam int userId
+            @PathVariable Integer channelId,
+            @PathVariable Integer memberId,
+            @RequestParam Integer userId
     ) {
         channelService.deleteMember(channelId, memberId, userId);
         return AppResponse.success()
@@ -125,8 +125,8 @@ public class ChannelController {
 
     @DeleteMapping("/{channelId}")
     public ResponseEntity<?> delete(
-            @PathVariable int channelId,
-            @RequestParam(name = "userId") int userId
+            @PathVariable Integer channelId,
+            @RequestParam(name = "userId") Integer userId
     ) {
         channelService.delete(channelId, userId);
         return AppResponse.success()

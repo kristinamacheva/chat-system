@@ -16,12 +16,12 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
             "   AND m.isActive = 1 " +
             "   AND (:lastMessageId IS NULL OR m.id < :lastMessageId) " +
             "ORDER BY m.createdAt DESC")
-    List<Message> findAllFriendMessagesWithCursor(int userId, int friendId, Integer lastMessageId, Pageable pageable);
+    List<Message> findAllFriendMessagesWithCursor(Integer userId, Integer friendId, Integer lastMessageId, Pageable pageable);
 
     @Query("SELECT m FROM Message m " +
             "WHERE m.channel.id = :channelId " +
             "   AND m.isActive = 1 " +
             "   AND (:lastMessageId IS NULL OR m.id < :lastMessageId) " +
             "ORDER BY m.createdAt DESC")
-    List<Message> findAllChannelMessagesWithCursor(int channelId, Integer lastMessageId, Pageable pageable);
+    List<Message> findAllChannelMessagesWithCursor(Integer channelId, Integer lastMessageId, Pageable pageable);
 }

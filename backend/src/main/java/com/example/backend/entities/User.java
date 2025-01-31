@@ -10,6 +10,10 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * Represents a registered user with authentication credentials and relationships such as friendships
+ * and channel memberships.
+ **/
 @Entity
 @Table(name = "td_users")
 @Getter
@@ -20,7 +24,7 @@ public class User {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "full_name", nullable = false, length = 256)
     @NotBlank(message = "Full name is required")
@@ -50,5 +54,5 @@ public class User {
     private List<Friendship> friendshipsAsUser2;
 
     @Column(name = "is_active")
-    private int isActive = 1;
+    private Integer isActive = 1;
 }

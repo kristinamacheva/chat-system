@@ -17,9 +17,9 @@ public class FriendshipController {
 
     @GetMapping
     public ResponseEntity<?> getAll(
-            @RequestParam(name = "userId") int userId,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "20") int size
+            @RequestParam(name = "userId") Integer userId,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "size", defaultValue = "20") Integer size
     ) {
         int pageIndex = page > 0 ? page - 1 : 0;
         var result = friendshipService.getAllFriends(userId, pageIndex, size);

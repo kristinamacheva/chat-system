@@ -41,7 +41,7 @@ public class MessageService {
      * @param recipientId the ID of the recipient
      * @return the created message as a ResponseFriendMessageDTO
      */
-    public ResponseFriendMessageDTO createFriendMessage(CreateFriendMessageDTO createFriendMessageDTO, int senderId, int recipientId) {
+    public ResponseFriendMessageDTO createFriendMessage(CreateFriendMessageDTO createFriendMessageDTO, Integer senderId, Integer recipientId) {
         if (senderId == recipientId) {
             throw new InvalidActionException("You cannot send messages to yourself.");
         }
@@ -63,7 +63,7 @@ public class MessageService {
      * @param size the number of messages to retrieve
      * @return a list of messages as ResponseFriendMessageDTO
      */
-    public List<ResponseFriendMessageDTO> getAllFriendMessages(int userId, int friendId, Integer lastMessageId, int size) {
+    public List<ResponseFriendMessageDTO> getAllFriendMessages(Integer userId, Integer friendId, Integer lastMessageId, Integer size) {
         Pageable pageable = PageRequest.of(0, size);
         List<Message> messages =  messageRepository.findAllFriendMessagesWithCursor(userId, friendId, lastMessageId, pageable);
         Collections.reverse(messages);
@@ -80,7 +80,7 @@ public class MessageService {
      * @param channelId the ID of the channel
      * @return the created message as a ResponseChannelMessageDTO
      */
-    public ResponseChannelMessageDTO createChannelMessage(CreateChannelMessageDTO createChannelMessageDTO, int senderId, int channelId) {
+    public ResponseChannelMessageDTO createChannelMessage(CreateChannelMessageDTO createChannelMessageDTO, Integer senderId, Integer channelId) {
         User sender = getActiveUserById(senderId);
         Channel senderChannel = getActiveChannelById(channelId);
         if (!channelMembershipRepository.existsByChannelIdAndUserIdAndIsActive(senderChannel.getId(), sender.getId(), ACTIVE)) {
@@ -99,7 +99,7 @@ public class MessageService {
      * @param size the number of messages to retrieve
      * @return a list of messages as ResponseChannelMessageDTO
      */
-    public List<ResponseChannelMessageDTO> getAllChannelMessages(int userId, int channelId, Integer lastMessageId, int size) {
+    public List<ResponseChannelMessageDTO> getAllChannelMessages(Integer userId, Integer channelId, Integer lastMessageId, Integer size) {
         if (!channelMembershipRepository.existsByChannelIdAndUserIdAndIsActive(channelId, userId, ACTIVE)) {
             throw new UnauthorizedAccessException();
         }
@@ -111,12 +111,12 @@ public class MessageService {
                 .toList();
     }
 
-    private User getActiveUserById(int userId) {
+    private User getActiveUserById(Integer userId) {
         return userRepository.findByIdAndIsActive(userId, ACTIVE)
                 .orElseThrow(UserNotFoundException::new);
     }
 
-    private Channel getActiveChannelById(int channelId) {
+    private Channel getActiveChannelById(Integer channelId) {
         return channelRepository.findByIdAndIsActive(channelId, ACTIVE)
                 .orElseThrow(() -> new ChannelNotFoundException(channelId));
     }

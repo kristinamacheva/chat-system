@@ -17,7 +17,7 @@ public class FriendInvitation {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
@@ -31,5 +31,5 @@ public class FriendInvitation {
     private LocalDateTime createdAt;
 
     @Column(name = "is_active")
-    private int isActive = 1;
+    private Integer isActive = 1;
 }

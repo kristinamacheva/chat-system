@@ -31,10 +31,10 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getAll(
-            @RequestParam(name = "userId") int userId,
+            @RequestParam(name = "userId") Integer userId,
             @RequestParam(name = "email", required = false) String email,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "20") int size
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "size", defaultValue = "20") Integer size
     ) {
         int pageIndex = page > 0 ? page - 1 : 0;
         var result = userService.getAll(userId, email, pageIndex, size);
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable int id) {
+    public ResponseEntity<?> getById(@PathVariable Integer id) {
         var result = userService.getOne(id);
         return AppResponse.success()
                 .withMessage("User found successfully")

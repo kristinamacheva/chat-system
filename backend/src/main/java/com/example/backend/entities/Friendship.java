@@ -15,7 +15,7 @@ public class Friendship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "user1_id", referencedColumnName = "id")
@@ -26,5 +26,5 @@ public class Friendship {
     private User user2;
 
     @Column(name = "is_active")
-    private int isActive = 1;
+    private Integer isActive = 1;
 }

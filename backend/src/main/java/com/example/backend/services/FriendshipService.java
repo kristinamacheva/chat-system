@@ -26,7 +26,7 @@ public class FriendshipService {
      * @param size the number of results per page
      * @return a paginated list of friends as ResponseUserDTO objects
      */
-    public Page<ResponseUserDTO> getAllFriends(int userId, int page, int size) {
+    public Page<ResponseUserDTO> getAllFriends(Integer userId, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> users = friendshipRepository.findFriendsByUserId(userId, pageable);
         return users.map(UserMapper::toResponseDTO);

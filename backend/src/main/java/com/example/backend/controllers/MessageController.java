@@ -20,8 +20,8 @@ public class MessageController {
 
     @PostMapping("/friends/{recipientId}")
     public ResponseEntity<?> createChannelMessage(
-            @PathVariable int recipientId,
-            @RequestParam(name = "userId") int senderId,
+            @PathVariable Integer recipientId,
+            @RequestParam(name = "userId") Integer senderId,
             @RequestBody @Valid CreateFriendMessageDTO messageDTO) {
         var result = messageService.createFriendMessage(messageDTO, senderId, recipientId);
         return AppResponse.success()
@@ -32,10 +32,10 @@ public class MessageController {
 
     @GetMapping("/friends/{friendId}")
     public ResponseEntity<?> getAllFriendMessages(
-            @PathVariable int friendId,
-            @RequestParam(name = "userId") int userId,
+            @PathVariable Integer friendId,
+            @RequestParam(name = "userId") Integer userId,
             @RequestParam(name = "lastMessageId", required = false) Integer lastMessageId,
-            @RequestParam(name = "size", defaultValue = "20") int size
+            @RequestParam(name = "size", defaultValue = "20") Integer size
     ) {
         var result = messageService.getAllFriendMessages(userId, friendId, lastMessageId, size);
         return AppResponse.success()
@@ -46,8 +46,8 @@ public class MessageController {
 
     @PostMapping("/channels/{channelId}")
     public ResponseEntity<?> createChannelMessage(
-            @PathVariable int channelId,
-            @RequestParam(name = "userId") int senderId,
+            @PathVariable Integer channelId,
+            @RequestParam(name = "userId") Integer senderId,
             @RequestBody @Valid CreateChannelMessageDTO messageDTO) {
         var result = messageService.createChannelMessage(messageDTO, senderId, channelId);
         return AppResponse.success()
@@ -58,10 +58,10 @@ public class MessageController {
 
     @GetMapping("/channels/{channelId}")
     public ResponseEntity<?> getAllChannelMessages(
-            @PathVariable int channelId,
-            @RequestParam(name = "userId") int userId,
+            @PathVariable Integer channelId,
+            @RequestParam(name = "userId") Integer userId,
             @RequestParam(name = "lastMessageId", required = false) Integer lastMessageId,
-            @RequestParam(name = "size", defaultValue = "20") int size
+            @RequestParam(name = "size", defaultValue = "20") Integer size
     ) {
         var result = messageService.getAllChannelMessages(userId, channelId, lastMessageId, size);
         return AppResponse.success()

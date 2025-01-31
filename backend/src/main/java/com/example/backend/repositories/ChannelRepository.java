@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -21,7 +20,7 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
       AND m.isActive = 1
 """)
 
-    Page<Channel> findActiveChannelsForUser(int userId, Pageable pageable);
+    Page<Channel> findActiveChannelsForUser(Integer userId, Pageable pageable);
 
-    Optional<Channel> findByIdAndIsActive(int id, int isActive);
+    Optional<Channel> findByIdAndIsActive(Integer id, Integer isActive);
 }

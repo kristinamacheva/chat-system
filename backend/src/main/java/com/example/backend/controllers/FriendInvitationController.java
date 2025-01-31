@@ -27,9 +27,9 @@ public class FriendInvitationController {
 
     @GetMapping
     public ResponseEntity<?> getAll(
-            @RequestParam(name = "recipientId") int recipientId,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "20") int size
+            @RequestParam(name = "recipientId") Integer recipientId,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "size", defaultValue = "20") Integer size
     ) {
         int pageIndex = page > 0 ? page - 1 : 0;
         var result = friendInvitationService.getAll(recipientId, pageIndex, size);
@@ -41,7 +41,7 @@ public class FriendInvitationController {
     }
 
     @PutMapping("/{id}/accept")
-    public ResponseEntity<?> acceptFriendInvitation(@PathVariable int id) {
+    public ResponseEntity<?> acceptFriendInvitation(@PathVariable Integer id) {
         friendInvitationService.acceptFriendInvitation(id);
         return AppResponse.success()
                 .withMessage("Invitation accepted successfully")
@@ -49,7 +49,7 @@ public class FriendInvitationController {
     }
 
     @PutMapping("/{id}/decline")
-    public ResponseEntity<?> declineFriendInvitation(@PathVariable int id) {
+    public ResponseEntity<?> declineFriendInvitation(@PathVariable Integer id) {
         friendInvitationService.declineFriendInvitation(id);
         return AppResponse.success()
                 .withMessage("Invitation declined successfully")

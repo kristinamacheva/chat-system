@@ -18,7 +18,7 @@ public class Message {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     @NotBlank(message = "Content is required")
@@ -40,5 +40,5 @@ public class Message {
     private LocalDateTime createdAt;
 
     @Column(name = "is_active", nullable = false)
-    private int isActive = 1;
+    private Integer isActive = 1;
 }

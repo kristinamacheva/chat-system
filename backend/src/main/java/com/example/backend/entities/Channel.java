@@ -19,7 +19,7 @@ public class Channel {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "name", nullable = false, length = 256)
     @NotBlank(message = "Name is required")
@@ -33,5 +33,5 @@ public class Channel {
     private List<Message> messages;
 
     @Column(name = "is_active")
-    private int isActive = 1;
+    private Integer isActive = 1;
 }

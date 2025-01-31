@@ -63,7 +63,7 @@ public class FriendInvitationService {
      * @param size the number of results per page
      * @return a paginated list of friend invitations
      */
-    public Page<ResponseFriendInvitationDTO> getAll(int recipientId, int page, int size) {
+    public Page<ResponseFriendInvitationDTO> getAll(Integer recipientId, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<FriendInvitation> invitations =  friendInvitationRepository.findByRecipientIdAndIsActive(recipientId, Status.ACTIVE, pageable);
         return invitations.map(FriendInvitationMapper::toResponseDTO);
@@ -76,7 +76,7 @@ public class FriendInvitationService {
      * @return the created friendship
      */
     @Transactional
-    public Friendship acceptFriendInvitation(int id) {
+    public Friendship acceptFriendInvitation(Integer id) {
         FriendInvitation invitation = deleteInvitation(id);
         User sender = invitation.getSender();
         User recipient = invitation.getRecipient();
@@ -90,7 +90,7 @@ public class FriendInvitationService {
      * @param id the ID of the invitation
      * @return the updated friend invitation marked as inactive
      */
-    public FriendInvitation declineFriendInvitation(int id) {
+    public FriendInvitation declineFriendInvitation(Integer id) {
         return deleteInvitation(id);
     }
 
@@ -100,14 +100,14 @@ public class FriendInvitationService {
      * @param id the ID of the invitation
      * @return the updated friend invitation marked as inactive
      */
-    private FriendInvitation deleteInvitation(int id) {
+    private FriendInvitation deleteInvitation(Integer id) {
         FriendInvitation invitation = friendInvitationRepository.findByIdAndIsActive(id, ACTIVE)
                 .orElseThrow(() -> new FriendInvitationNotFoundException(id));
         invitation.setIsActive(INACTIVE);
         return friendInvitationRepository.save(invitation);
     }
 
-    private User validateUserExistence(int userId) {
+    private User validateUserExistence(Integer userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
     }

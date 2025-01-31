@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface FriendInvitationRepository extends JpaRepository<FriendInvitation, Integer> {
 
-    boolean existsBySenderIdAndRecipientIdAndIsActive(int senderId, int recipientId, int isActive);
+    boolean existsBySenderIdAndRecipientIdAndIsActive(Integer senderId, Integer recipientId, Integer isActive);
 
-    Optional<FriendInvitation> findByIdAndIsActive(int id, int isActive);
+    Optional<FriendInvitation> findByIdAndIsActive(Integer id, Integer isActive);
 
-    Page<FriendInvitation> findByRecipientIdAndIsActive(int recipientId, int isActive, Pageable pageable);
+    Page<FriendInvitation> findByRecipientIdAndIsActive(Integer recipientId, Integer isActive, Pageable pageable);
 }
