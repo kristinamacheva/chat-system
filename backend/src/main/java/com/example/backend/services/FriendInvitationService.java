@@ -5,10 +5,7 @@ import com.example.backend.dto.ResponseFriendInvitationDTO;
 import com.example.backend.entities.FriendInvitation;
 import com.example.backend.entities.Friendship;
 import com.example.backend.entities.User;
-import com.example.backend.exceptions.FriendInvitationAlreadyExistsException;
-import com.example.backend.exceptions.FriendInvitationNotFoundException;
-import com.example.backend.exceptions.FriendshipAlreadyExistsException;
-import com.example.backend.exceptions.InvalidActionException;
+import com.example.backend.exceptions.*;
 import com.example.backend.mappers.FriendInvitationMapper;
 import com.example.backend.mappers.FriendshipMapper;
 import com.example.backend.repositories.FriendInvitationRepository;
@@ -20,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 import static com.example.backend.utils.Status.ACTIVE;
 import static com.example.backend.utils.Status.INACTIVE;
@@ -43,11 +42,11 @@ public class FriendInvitationService {
      * @param createFriendInvitationDTO the data for creating the invitation
      * @return the created friend invitation
      */
-    public FriendInvitation createFriendInvitation(CreateFriendInvitationDTO createFriendInvitationDTO) {
-        if (createFriendInvitationDTO.getSenderId() == createFriendInvitationDTO.getRecipientId()) {
+    public FriendInvitation createFriendInvitation(Integer senderId, CreateFriendInvitationDTO createFriendInvitationDTO) {
+        if (Objects.equals(senderId, createFriendInvitationDTO.getRecipientId())) {
             throw new InvalidActionException("You cannot send an invitation to yourself.");
         }
-        User sender = validateUserExistence(createFriendInvitationDTO.getSenderId());
+        User sender = validateUserExistence(senderId);
         User recipient = validateUserExistence(createFriendInvitationDTO.getRecipientId());
         checkActiveFriendship(sender, recipient);
         checkExistingActiveInvitation(sender, recipient);
@@ -76,8 +75,8 @@ public class FriendInvitationService {
      * @return the created friendship
      */
     @Transactional
-    public Friendship acceptFriendInvitation(Integer id) {
-        FriendInvitation invitation = deleteInvitation(id);
+    public Friendship acceptFriendInvitation(Integer userId, Integer id) {
+        FriendInvitation invitation = deleteInvitation(userId, id);
         User sender = invitation.getSender();
         User recipient = invitation.getRecipient();
         Friendship friendship = FriendshipMapper.toEntity(sender, recipient);
@@ -90,8 +89,8 @@ public class FriendInvitationService {
      * @param id the ID of the invitation
      * @return the updated friend invitation marked as inactive
      */
-    public FriendInvitation declineFriendInvitation(Integer id) {
-        return deleteInvitation(id);
+    public FriendInvitation declineFriendInvitation(Integer userId, Integer id) {
+        return deleteInvitation(userId, id);
     }
 
     /**
@@ -100,9 +99,12 @@ public class FriendInvitationService {
      * @param id the ID of the invitation
      * @return the updated friend invitation marked as inactive
      */
-    private FriendInvitation deleteInvitation(Integer id) {
+    private FriendInvitation deleteInvitation(Integer userId, Integer id) {
         FriendInvitation invitation = friendInvitationRepository.findByIdAndIsActive(id, ACTIVE)
                 .orElseThrow(() -> new FriendInvitationNotFoundException(id));
+        if (!userId.equals(invitation.getRecipient().getId())) {
+            throw new UnauthorizedAccessException();
+        }
         invitation.setIsActive(INACTIVE);
         return friendInvitationRepository.save(invitation);
     }

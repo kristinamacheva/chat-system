@@ -18,8 +18,11 @@ public class FriendInvitationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createFriendInvitation(@RequestBody @Valid CreateFriendInvitationDTO createFriendInvitationDTO) {
-        friendInvitationService.createFriendInvitation(createFriendInvitationDTO);
+    public ResponseEntity<?> createFriendInvitation(
+            @RequestParam(name = "userId") Integer senderId,
+            @RequestBody @Valid CreateFriendInvitationDTO createFriendInvitationDTO
+    ) {
+        friendInvitationService.createFriendInvitation(senderId, createFriendInvitationDTO);
         return AppResponse.success()
                 .withMessage("Invitation sent successfully")
                 .build();
@@ -27,7 +30,7 @@ public class FriendInvitationController {
 
     @GetMapping
     public ResponseEntity<?> getAll(
-            @RequestParam(name = "recipientId") Integer recipientId,
+            @RequestParam(name = "userId") Integer recipientId,
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "size", defaultValue = "20") Integer size
     ) {
@@ -41,16 +44,22 @@ public class FriendInvitationController {
     }
 
     @PutMapping("/{id}/accept")
-    public ResponseEntity<?> acceptFriendInvitation(@PathVariable Integer id) {
-        friendInvitationService.acceptFriendInvitation(id);
+    public ResponseEntity<?> acceptFriendInvitation(
+            @PathVariable Integer id,
+            @RequestParam(name = "userId") Integer userId
+    ) {
+        friendInvitationService.acceptFriendInvitation(userId, id);
         return AppResponse.success()
                 .withMessage("Invitation accepted successfully")
                 .build();
     }
 
     @PutMapping("/{id}/decline")
-    public ResponseEntity<?> declineFriendInvitation(@PathVariable Integer id) {
-        friendInvitationService.declineFriendInvitation(id);
+    public ResponseEntity<?> declineFriendInvitation(
+            @PathVariable Integer id,
+            @RequestParam(name = "userId") Integer userId
+    ) {
+        friendInvitationService.declineFriendInvitation(userId, id);
         return AppResponse.success()
                 .withMessage("Invitation declined successfully")
                 .build();

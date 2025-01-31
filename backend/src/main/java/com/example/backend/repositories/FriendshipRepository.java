@@ -28,6 +28,5 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Integer>
                 AND f.isActive = 1
                 AND u.id != :userId
             """)
-
     Page<User> findFriendsByUserId(Integer userId, Pageable pageable);
 }

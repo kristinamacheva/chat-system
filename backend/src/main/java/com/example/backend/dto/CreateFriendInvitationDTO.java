@@ -8,9 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 public class CreateFriendInvitationDTO {
 
-    @NotNull(message = "Sender ID is required")
-    private int senderId;
-
     @NotNull(message = "Recipient ID is required")
-    private int recipientId;
+    private Integer recipientId;
 }

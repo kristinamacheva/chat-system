@@ -9,6 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BasicUserDTO {
 
-    private int id;
+    private Integer id;
     private String fullName;
 }

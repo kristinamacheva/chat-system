@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserWithFriendshipStatusDTO {
 
-    private int id;
+    private Integer id;
     private String fullName;
     private String email;
     private boolean isFriend;

@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class ResponseChannelDetailsDTO {
 
-    private int id;
+    private Integer id;
     private String name;
     private ResponseUserDTO owner;
     private Set<ResponseUserDTO> admins;

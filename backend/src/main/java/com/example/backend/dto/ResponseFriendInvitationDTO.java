@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ResponseFriendInvitationDTO {
 
-    private int id;
+    private Integer id;
     private String userFullName;
     private String userEmail;
     private LocalDate invitationDate;

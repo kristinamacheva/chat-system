@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ResponseFriendMessageDTO {
 
-    private int id;
+    private Integer id;
     private BasicUserDTO sender;
     private String content;
     private LocalDateTime createdAt;
