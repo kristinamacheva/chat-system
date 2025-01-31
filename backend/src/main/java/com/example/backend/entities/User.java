@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Represents a registered user with authentication credentials and relationships such as friendships
  * and channel memberships.
- **/
+ */
 @Entity
 @Table(name = "td_users")
 @Getter

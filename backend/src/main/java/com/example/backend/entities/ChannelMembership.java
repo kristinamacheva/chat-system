@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Manages user participation in channels and assigns roles.
+ */
 @Entity
 @Table(name = "tc_channel_membership")
 @Getter

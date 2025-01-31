@@ -9,6 +9,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * Defines a communication channel where users can send messages and have memberships.
+ */
 @Entity
 @Table(name = "td_channels")
 @Getter

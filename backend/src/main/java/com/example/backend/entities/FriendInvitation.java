@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * Tracks pending friend requests between users.
+ */
 @Entity
 @Table(name = "tc_friend_invitations")
 @Getter

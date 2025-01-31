@@ -8,6 +8,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * Stores messages sent by users within channels or directly to recipients.
+ */
 @Entity
 @Table(name = "td_messages")
 @Getter

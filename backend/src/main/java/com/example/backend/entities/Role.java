@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Defines user roles within the system.
+ */
 @Entity
 @Table(name = "td_roles")
 @Getter
