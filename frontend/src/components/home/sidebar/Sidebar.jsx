@@ -9,6 +9,8 @@ export default function Sidebar({
     fetchMoreFriends,
     hasMoreChannels,
     hasMoreFriends,
+    isChannelsLoading,
+    isFriendsLoading,
     onChannelClick,
     onFriendClick,
 }) {
@@ -21,29 +23,31 @@ export default function Sidebar({
                 fetchMoreChannels();
             }
         });
+        if (channelLoaderRef.current) {
+            channelObserver.observe(channelLoaderRef.current);
+        }
+        return () => {
+            if (channelLoaderRef.current) {
+                channelObserver.unobserve(channelLoaderRef.current);
+            }
+        };
+    }, [hasMoreChannels, fetchMoreChannels]);
 
+    useEffect(() => {
         const friendObserver = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting && hasMoreFriends) {
                 fetchMoreFriends();
             }
         });
-
-        if (channelLoaderRef.current) {
-            channelObserver.observe(channelLoaderRef.current);
-        }
         if (friendLoaderRef.current) {
             friendObserver.observe(friendLoaderRef.current);
         }
-
         return () => {
-            if (channelLoaderRef.current) {
-                channelObserver.unobserve(channelLoaderRef.current);
-            }
             if (friendLoaderRef.current) {
                 friendObserver.unobserve(friendLoaderRef.current);
             }
         };
-    }, [hasMoreChannels, hasMoreFriends, fetchMoreChannels, fetchMoreFriends]);
+    }, [hasMoreFriends, fetchMoreFriends]);
 
     return (
         <Box
@@ -84,16 +88,14 @@ export default function Sidebar({
                             {channel.name}
                         </Button>
                     ))}
-                    {hasMoreChannels && (
                         <Box
                             ref={channelLoaderRef}
                             w="full"
                             textAlign="center"
                             py={2}
                         >
-                            <Spinner size="sm" />
+                            {isChannelsLoading && <Spinner />}
                         </Box>
-                    )}
                 </VStack>
                 <VStack
                     align="start"
@@ -121,16 +123,14 @@ export default function Sidebar({
                             {friend.fullName}
                         </Button>
                     ))}
-                    {hasMoreFriends && (
                         <Box
                             ref={friendLoaderRef}
                             w="full"
                             textAlign="center"
                             py={2}
                         >
-                            <Spinner size="sm" />
+                            {isFriendsLoading && <Spinner />}
                         </Box>
-                    )}
                 </VStack>
             </Flex>
         </Box>

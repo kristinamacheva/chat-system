@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef, useCallback } from "react";
 import * as friendshipService from "../../services/friendshipService";
 import * as channelService from "../../services/channelService";
 import AuthContext from "../../contexts/authContext";
@@ -14,35 +14,20 @@ export default function Home() {
     const [hasMoreFriends, setHasMoreFriends] = useState(true);
     const [isChannelsLoading, setIsChannelsLoading] = useState(false);
     const [isFriendsLoading, setIsFriendsLoading] = useState(false);
-    const channelPageRef = useRef(2); // Infinite scroll starts from page 2
-    const friendPageRef = useRef(2);  // Infinite scroll starts from page 2
+    const [channelsPageIndex, setChannelsPageIndex] = useState(2);
+    const [friendsPageIndex, setFriendsPageIndex] = useState(2);
     const [selectedChannel, setSelectedChannel] = useState(null);
     const [selectedFriend, setSelectedFriend] = useState(null);
     const toast = useToast();
-    const isFetching = useRef(false); // Prevents duplicate calls
+    const isFetching = useRef(false);
 
-    // Fetches first page of channels and friends (INITIAL LOAD ONLY)
-    useEffect(() => {
-        if (!currentUserId || isFetching.current) return;
-
-        isFetching.current = true;
-
-        const fetchInitialData = async () => {
-            await fetchChannels();
-            await fetchFriends();
-            isFetching.current = false;
-
-        };
-
-        fetchInitialData();
-    }, [currentUserId]);
-
-    const fetchChannels = async () => {
+    const fetchChannels = useCallback(async () => {
         setIsChannelsLoading(true);
         try {
-            const channelsResponse = await channelService.getAll(currentUserId, 1);
-            setChannels(channelsResponse.data);
-            setHasMoreChannels(channelsResponse.currentPage < channelsResponse.totalPages);
+            const { data, totalPages, currentPage } = await channelService.getAll(currentUserId, 1);
+            setChannels(data);
+            setHasMoreChannels(currentPage < totalPages);
+            setChannelsPageIndex(2);
         } catch (error) {
             toast({
                 title: "Error.",
@@ -53,22 +38,20 @@ export default function Home() {
             });
         }
         setIsChannelsLoading(false);
-    }
+    }, [currentUserId, toast]);
 
-    // Loads more channels for infinite scroll
-    const fetchMoreChannels = async () => {
+    const fetchMoreChannels = useCallback(async () => {
         if (!hasMoreChannels || isChannelsLoading) return;
 
         setIsChannelsLoading(true);
         try {
             const { data, totalPages, currentPage } = await channelService.getAll(
                 currentUserId,
-                channelPageRef.current
+                channelsPageIndex
             );
-
-            setChannels((prev) => [...prev, ...data]); // Append new data
+            setChannels((state) => [...state, ...data]); 
             setHasMoreChannels(currentPage < totalPages);
-            channelPageRef.current += 1;
+            setChannelsPageIndex((prevIndex) => prevIndex + 1);
         } catch (error) {
             toast({
                 title: "Error.",
@@ -79,14 +62,15 @@ export default function Home() {
             });
         }
         setIsChannelsLoading(false);
-    };
+    }, [currentUserId, hasMoreChannels, isChannelsLoading, channelsPageIndex, toast]);
 
-    const fetchFriends = async() => {
+    const fetchFriends = useCallback(async () => {
         setIsFriendsLoading(true);
         try {
-            const friendsResponse = await friendshipService.getAll(currentUserId, 1);
-            setFriends(friendsResponse.data);
-            setHasMoreFriends(friendsResponse.currentPage < friendsResponse.totalPages);
+            const { data, totalPages, currentPage } = await friendshipService.getAll(currentUserId, 1);
+            setFriends(data);
+            setHasMoreFriends(currentPage < totalPages);
+            setFriendsPageIndex(2);
         } catch (error) {
             toast({
                 title: "Error.",
@@ -97,23 +81,20 @@ export default function Home() {
             });
         }
         setIsFriendsLoading(false);
+    }, [currentUserId, toast]);
 
-    }
-
-    // Loads more friends for infinite scroll
-    const fetchMoreFriends = async () => {
+    const fetchMoreFriends = useCallback(async () => {
         if (!hasMoreFriends || isFriendsLoading) return;
 
         setIsFriendsLoading(true);
         try {
             const { data, totalPages, currentPage } = await friendshipService.getAll(
                 currentUserId,
-                friendPageRef.current
+                friendsPageIndex
             );
-
-            setFriends((prev) => [...prev, ...data]); // Append new data
+            setFriends((state) => [...state, ...data]); 
             setHasMoreFriends(currentPage < totalPages);
-            friendPageRef.current += 1;
+            setFriendsPageIndex((prevIndex) => prevIndex + 1);
         } catch (error) {
             toast({
                 title: "Error.",
@@ -124,7 +105,19 @@ export default function Home() {
             });
         }
         setIsFriendsLoading(false);
-    };
+    }, [currentUserId, hasMoreFriends, isFriendsLoading, friendsPageIndex, toast]);
+
+    useEffect(() => {
+        if (!currentUserId || isFetching.current) return;
+        isFetching.current = true;
+
+        const fetchInitialData = async () => {
+            await fetchChannels();
+            await fetchFriends();
+            isFetching.current = false;
+        };
+        fetchInitialData();
+    }, [currentUserId, fetchChannels, fetchFriends]);
 
     const handleChannelClick = (channel) => {
         setSelectedChannel(channel);
@@ -141,10 +134,12 @@ export default function Home() {
             <Sidebar
                 channels={channels}
                 friends={friends}
-                fetchMoreChannels={fetchMoreChannels} // Infinite scroll
-                fetchMoreFriends={fetchMoreFriends} // Infinite scroll
+                fetchMoreChannels={fetchMoreChannels}
+                fetchMoreFriends={fetchMoreFriends}
                 hasMoreChannels={hasMoreChannels}
                 hasMoreFriends={hasMoreFriends}
+                isChannelsLoading={isChannelsLoading}
+                isFriendsLoading={isFriendsLoading}
                 onChannelClick={handleChannelClick}
                 onFriendClick={handleFriendClick}
             />

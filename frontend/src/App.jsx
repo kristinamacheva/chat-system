@@ -24,7 +24,6 @@ function App() {
                         element={<ChannelDetails />}
                     />
                 </Route>
-                {/* <Route path="/user-not-found" element={<UserNotFound />} /> */}
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </AuthProvider>

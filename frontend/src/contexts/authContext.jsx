@@ -5,7 +5,7 @@ import UserNotFound from "../components/user-not-found/UserNotFound";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [userId, setUserId] = useState(11);
+    const [userId, setUserId] = useState(1);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
