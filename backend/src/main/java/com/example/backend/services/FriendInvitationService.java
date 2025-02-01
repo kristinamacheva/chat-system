@@ -39,6 +39,7 @@ public class FriendInvitationService {
     /**
      * Creates a new friend invitation.
      *
+     * @param senderId the ID of the creator of the invitation
      * @param createFriendInvitationDTO the data for creating the invitation
      * @return the created friend invitation
      */
@@ -71,6 +72,7 @@ public class FriendInvitationService {
     /**
      * Accepts a friend invitation, creating a friendship and removing the invitation.
      *
+     * @param userId the ID of the current user
      * @param id the ID of the invitation
      * @return the created friendship
      */
@@ -86,6 +88,7 @@ public class FriendInvitationService {
     /**
      * Declines a friend invitation, marking it as inactive.
      *
+     * @param userId the ID of the current user
      * @param id the ID of the invitation
      * @return the updated friend invitation marked as inactive
      */
@@ -96,6 +99,7 @@ public class FriendInvitationService {
     /**
      * Marks a friend invitation as inactive.
      *
+     * @param userId the ID of the current user
      * @param id the ID of the invitation
      * @return the updated friend invitation marked as inactive
      */
