@@ -5,7 +5,7 @@ const baseUrl = `${API_BASE_URL}/friend-invitations`;
 
 export const getAll = async (recipientId, page) => {
     const result = await request.get(
-        `${baseUrl}?recipientId=${recipientId}&page=${page}&size=6`
+        `${baseUrl}?userId=${recipientId}&page=${page}&size=6`
     );
     return result;
 };

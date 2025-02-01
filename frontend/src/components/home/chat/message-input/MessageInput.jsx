@@ -5,7 +5,7 @@ import {
     InputRightElement,
     useToast,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { IoSendSharp } from "react-icons/io5";
 import AuthContext from "../../../../contexts/authContext";
 import * as messageService from "../../../../services/messageService";

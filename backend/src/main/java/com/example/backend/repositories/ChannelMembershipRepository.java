@@ -43,7 +43,9 @@ public interface ChannelMembershipRepository extends JpaRepository<ChannelMember
             "JOIN FETCH cm.role r " +
             "WHERE cm.channel.id = :channelId " +
             "AND cm.isActive = 1 " +
-            "AND (:email IS NULL OR LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%')))")
+            "AND (:email IS NULL OR LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%')))" +
+            "ORDER BY u.email ASC"
+    )
     Page<ChannelMembership> findActiveMembershipsByChannelIdAndEmail(
             Integer channelId,
             String email,

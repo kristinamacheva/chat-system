@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.backend.utils.Status.ACTIVE;
 
@@ -38,18 +39,16 @@ public class MessageService {
      *
      * @param createFriendMessageDTO the data transfer object containing message details
      * @param senderId the ID of the sender
-     * @param recipientId the ID of the recipient
+     * @param friendId the ID of the recipient
      * @return the created message as a ResponseFriendMessageDTO
      */
-    public ResponseFriendMessageDTO createFriendMessage(CreateFriendMessageDTO createFriendMessageDTO, Integer senderId, Integer recipientId) {
-        if (senderId == recipientId) {
+    public ResponseFriendMessageDTO createFriendMessage(CreateFriendMessageDTO createFriendMessageDTO, Integer senderId, Integer friendId) {
+        if (Objects.equals(senderId, friendId)) {
             throw new InvalidActionException("You cannot send messages to yourself.");
         }
         User sender = getActiveUserById(senderId);
-        User recipient = getActiveUserById(recipientId);
-        if (!friendshipRepository.existsActiveFriendship(sender.getId(), recipient.getId())) {
-            throw new FriendshipNotFoundException();
-        }
+        User recipient = getActiveUserById(friendId);
+        checkActiveFriendship(sender.getId(), recipient.getId());
         Message message = MessageMapper.toEntity(createFriendMessageDTO, sender, recipient);
         return MessageMapper.toResponseFriendMessageDTO(messageRepository.save(message));
     }
@@ -65,6 +64,7 @@ public class MessageService {
      */
     public List<ResponseFriendMessageDTO> getAllFriendMessages(Integer userId, Integer friendId, Integer lastMessageId, Integer size) {
         Pageable pageable = PageRequest.of(0, size);
+        checkActiveFriendship(userId, friendId);
         List<Message> messages =  messageRepository.findAllFriendMessagesWithCursor(userId, friendId, lastMessageId, pageable);
         Collections.reverse(messages);
         return messages.stream()
@@ -109,6 +109,12 @@ public class MessageService {
         return messages.stream()
                 .map(MessageMapper::toResponseChannelMessageDTO)
                 .toList();
+    }
+
+    private void checkActiveFriendship(Integer userOneId, Integer userTwoId) {
+        if (!friendshipRepository.existsActiveFriendship(userOneId, userTwoId)) {
+            throw new FriendshipNotFoundException();
+        }
     }
 
     private User getActiveUserById(Integer userId) {

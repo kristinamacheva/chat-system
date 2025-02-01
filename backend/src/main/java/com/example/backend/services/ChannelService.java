@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -227,7 +228,7 @@ public class ChannelService {
     }
 
     private void validateOwnerAction(Integer memberId, Integer userId, String action) {
-        if (memberId == userId) {
+        if (Objects.equals(memberId, userId)) {
             throw new InvalidActionException("Owner cannot " + action + " themselves.");
         }
     }

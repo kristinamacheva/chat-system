@@ -6,7 +6,6 @@ import FriendsPage from "./components/friends-page/FriendsPage";
 import ChannelsPage from "./components/channels-page/ChannelsPage";
 import Navbar from "./components/navbar/Navbar";
 import NotFound from "./components/not-found/NotFound";
-import UserNotFound from "./components/user-not-found/UserNotFound";
 import ChannelDetails from "./components/channels-page/channel-details/ChannelDetails";
 
 function App() {

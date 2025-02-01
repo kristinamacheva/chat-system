@@ -14,29 +14,59 @@ export default function Home() {
     const [hasMoreFriends, setHasMoreFriends] = useState(true);
     const [isChannelsLoading, setIsChannelsLoading] = useState(false);
     const [isFriendsLoading, setIsFriendsLoading] = useState(false);
-    const channelPageRef = useRef(1);
-    const friendPageRef = useRef(1);
+    const channelPageRef = useRef(2); // Infinite scroll starts from page 2
+    const friendPageRef = useRef(2);  // Infinite scroll starts from page 2
     const [selectedChannel, setSelectedChannel] = useState(null);
     const [selectedFriend, setSelectedFriend] = useState(null);
     const toast = useToast();
+    const isFetching = useRef(false); // Prevents duplicate calls
 
+    // Fetches first page of channels and friends (INITIAL LOAD ONLY)
     useEffect(() => {
-        fetchChannels();
-        fetchFriends();
-    }, []);
+        if (!currentUserId || isFetching.current) return;
+
+        isFetching.current = true;
+
+        const fetchInitialData = async () => {
+            await fetchChannels();
+            await fetchFriends();
+            isFetching.current = false;
+
+        };
+
+        fetchInitialData();
+    }, [currentUserId]);
 
     const fetchChannels = async () => {
+        setIsChannelsLoading(true);
+        try {
+            const channelsResponse = await channelService.getAll(currentUserId, 1);
+            setChannels(channelsResponse.data);
+            setHasMoreChannels(channelsResponse.currentPage < channelsResponse.totalPages);
+        } catch (error) {
+            toast({
+                title: "Error.",
+                description: error.message || "Error loading channels.",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+        setIsChannelsLoading(false);
+    }
+
+    // Loads more channels for infinite scroll
+    const fetchMoreChannels = async () => {
         if (!hasMoreChannels || isChannelsLoading) return;
 
         setIsChannelsLoading(true);
         try {
-            const { data, totalPages, currentPage } =
-                await channelService.getAll(
-                    currentUserId,
-                    channelPageRef.current
-                );
+            const { data, totalPages, currentPage } = await channelService.getAll(
+                currentUserId,
+                channelPageRef.current
+            );
 
-            setChannels((state) => [...state, ...data]);
+            setChannels((prev) => [...prev, ...data]); // Append new data
             setHasMoreChannels(currentPage < totalPages);
             channelPageRef.current += 1;
         } catch (error) {
@@ -47,23 +77,41 @@ export default function Home() {
                 duration: 5000,
                 isClosable: true,
             });
-        } finally {
-            setIsChannelsLoading(false);
         }
+        setIsChannelsLoading(false);
     };
 
-    const fetchFriends = async () => {
+    const fetchFriends = async() => {
+        setIsFriendsLoading(true);
+        try {
+            const friendsResponse = await friendshipService.getAll(currentUserId, 1);
+            setFriends(friendsResponse.data);
+            setHasMoreFriends(friendsResponse.currentPage < friendsResponse.totalPages);
+        } catch (error) {
+            toast({
+                title: "Error.",
+                description: error.message || "Error loading friends.",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+        setIsFriendsLoading(false);
+
+    }
+
+    // Loads more friends for infinite scroll
+    const fetchMoreFriends = async () => {
         if (!hasMoreFriends || isFriendsLoading) return;
 
         setIsFriendsLoading(true);
         try {
-            const { data, totalPages, currentPage } =
-                await friendshipService.getAll(
-                    currentUserId,
-                    friendPageRef.current
-                );
+            const { data, totalPages, currentPage } = await friendshipService.getAll(
+                currentUserId,
+                friendPageRef.current
+            );
 
-            setFriends((state) => [...state, ...data]);
+            setFriends((prev) => [...prev, ...data]); // Append new data
             setHasMoreFriends(currentPage < totalPages);
             friendPageRef.current += 1;
         } catch (error) {
@@ -74,9 +122,8 @@ export default function Home() {
                 duration: 5000,
                 isClosable: true,
             });
-        } finally {
-            setIsFriendsLoading(false);
         }
+        setIsFriendsLoading(false);
     };
 
     const handleChannelClick = (channel) => {
@@ -94,18 +141,15 @@ export default function Home() {
             <Sidebar
                 channels={channels}
                 friends={friends}
-                fetchMoreChannels={fetchChannels}
-                fetchMoreFriends={fetchFriends}
+                fetchMoreChannels={fetchMoreChannels} // Infinite scroll
+                fetchMoreFriends={fetchMoreFriends} // Infinite scroll
                 hasMoreChannels={hasMoreChannels}
                 hasMoreFriends={hasMoreFriends}
-                onChannelClick={handleChannelClick}  
+                onChannelClick={handleChannelClick}
                 onFriendClick={handleFriendClick}
             />
             {(selectedChannel || selectedFriend) && (
-                <Chat
-                    selectedChannel={selectedChannel}
-                    selectedFriend={selectedFriend}
-                />
+                <Chat selectedChannel={selectedChannel} selectedFriend={selectedFriend} />
             )}
         </HStack>
     );

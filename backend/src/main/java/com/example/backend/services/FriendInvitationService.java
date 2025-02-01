@@ -51,6 +51,7 @@ public class FriendInvitationService {
         User recipient = validateUserExistence(createFriendInvitationDTO.getRecipientId());
         checkActiveFriendship(sender, recipient);
         checkExistingActiveInvitation(sender, recipient);
+        checkExistingActiveInvitation(recipient, sender);
         FriendInvitation invitation = FriendInvitationMapper.toEntity(sender, recipient);
         return friendInvitationRepository.save(invitation);
     }

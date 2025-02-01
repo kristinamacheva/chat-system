@@ -7,8 +7,8 @@ export const createChannelMessage = async (senderId, channelId, messageData) => 
     return await request.post(`${baseUrl}/channels/${channelId}?userId=${senderId}`, messageData);
 };
 
-export const createFriendMessage = async (senderId, recipientId, messageData) => {
-    return await request.post(`${baseUrl}/friends/${recipientId}?userId=${senderId}`, messageData);
+export const createFriendMessage = async (senderId, friendId, messageData) => {
+    return await request.post(`${baseUrl}/friends/${friendId}?userId=${senderId}`, messageData);
 };
 
 export const getAllFriendMessages = async (userId, friendId, lastMessageId = null) => {

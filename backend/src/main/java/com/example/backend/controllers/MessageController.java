@@ -18,12 +18,12 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-    @PostMapping("/friends/{recipientId}")
+    @PostMapping("/friends/{friendId}")
     public ResponseEntity<?> createChannelMessage(
-            @PathVariable Integer recipientId,
+            @PathVariable Integer friendId,
             @RequestParam(name = "userId") Integer senderId,
             @RequestBody @Valid CreateFriendMessageDTO messageDTO) {
-        var result = messageService.createFriendMessage(messageDTO, senderId, recipientId);
+        var result = messageService.createFriendMessage(messageDTO, senderId, friendId);
         return AppResponse.success()
                 .withMessage("Friend message created successfully")
                 .withData(result)
@@ -35,7 +35,7 @@ public class MessageController {
             @PathVariable Integer friendId,
             @RequestParam(name = "userId") Integer userId,
             @RequestParam(name = "lastMessageId", required = false) Integer lastMessageId,
-            @RequestParam(name = "size", defaultValue = "20") Integer size
+            @RequestParam(name = "size", defaultValue = "10") Integer size
     ) {
         var result = messageService.getAllFriendMessages(userId, friendId, lastMessageId, size);
         return AppResponse.success()
@@ -61,7 +61,7 @@ public class MessageController {
             @PathVariable Integer channelId,
             @RequestParam(name = "userId") Integer userId,
             @RequestParam(name = "lastMessageId", required = false) Integer lastMessageId,
-            @RequestParam(name = "size", defaultValue = "20") Integer size
+            @RequestParam(name = "size", defaultValue = "10") Integer size
     ) {
         var result = messageService.getAllChannelMessages(userId, channelId, lastMessageId, size);
         return AppResponse.success()

@@ -1,0 +1,1027 @@
+{
+	"info": {
+		"_postman_id": "d49a0ea6-a4b7-474c-92a7-c2fd38d67b6a",
+		"name": "Final Project - Chat System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23582229"
+	},
+	"item": [
+		{
+			"name": "user controller",
+			"item": [
+				{
+					"name": "Create new user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Dimitur Marinov\",\r\n    \"email\": \"dimitur@gmail.com\",\r\n    \"password\": \"dwdw2424d\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new user - email already exists",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Dimitur Ivanov\",\r\n    \"email\": \"dimitur@gmail.com\",\r\n    \"password\": \"dwdw2424d\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/users?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users by email - partial",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/users?userId=1&email=iva",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "email",
+									"value": "iva"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users by email - full",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/users?userId=1&email=georgi.ivanov@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "email",
+									"value": "georgi.ivanov@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "channel controller",
+			"item": [
+				{
+					"name": "Create new channel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Travel Adventures\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/channels?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new member",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"maria.dim@gmail.com\",\r\n  \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/channels/11/members?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels",
+								"11",
+								"members"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update member",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/channels/1/members/2?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels",
+								"1",
+								"members",
+								"2"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete member",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/channels/11/members/2?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels",
+								"11",
+								"members",
+								"2"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all user channels",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/channels?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all channel members",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/channels/1/members",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels",
+								"1",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get channel",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/channels/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update channel",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"General Chat 2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/channels/1?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels",
+								"1"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update channel (Guest user)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"General Chat 2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/channels/1?userId=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels",
+								"1"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete channel",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/channels/14?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels",
+								"14"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete channel (Guest user)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/channels/14?userId=7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels",
+								"14"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new member that doesn't exist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"newuser@example.com\",\r\n  \"role\": \"GUEST\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/channels/1/members?userId=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"channels",
+								"1",
+								"members"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "friend invitation controller",
+			"item": [
+				{
+					"name": "Create a friend invitation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"recipientId\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/friend-invitations?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friend-invitations"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a friend invitation (non-existent user)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"recipientId\": 1111111111\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/friend-invitations?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friend-invitations"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Decline a friend invitation",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/friend-invitations/22/decline?userId=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friend-invitations",
+								"22",
+								"decline"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Decline a friend invitation (not the current user)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/friend-invitations/23/decline?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friend-invitations",
+								"23",
+								"decline"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept a friend invitation (not the current user)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/friend-invitations/24/accept?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friend-invitations",
+								"24",
+								"accept"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept a friend invitation",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/friend-invitations/26/accept?userId=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friend-invitations",
+								"26",
+								"accept"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Decline a friend invitation (non-existent)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/friend-invitations/1111111/decline?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friend-invitations",
+								"1111111",
+								"decline"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept a friend invitation (non-existent)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/friend-invitations/1/accept?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friend-invitations",
+								"1",
+								"accept"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a friend invitation (existing friendship)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"recipientId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/friend-invitations?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friend-invitations"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all friend invitations for a user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/friend-invitations?userId=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friend-invitations"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "friendship-controller",
+			"item": [
+				{
+					"name": "Get all friends",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8165/friendships?userId=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"friendships"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "message controller",
+			"item": [
+				{
+					"name": "Create new channel message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Whats up\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/messages/channels/1?userId=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"messages",
+								"channels",
+								"1"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new friend message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"I havent finished it yet\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/messages/friends/1?userId=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"messages",
+								"friends",
+								"1"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all friend messages",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Test channel message\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/messages/friends/2?userId=1&lastMessageId=19",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"messages",
+								"friends",
+								"2"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "lastMessageId",
+									"value": "19"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all channel messages",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Test channel message\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8165/messages/channels/1?userId=1&lastMessageId=22",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8165",
+							"path": [
+								"messages",
+								"channels",
+								"1"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "lastMessageId",
+									"value": "22"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

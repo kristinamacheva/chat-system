@@ -18,8 +18,8 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
     WHERE m.user.id = :userId
       AND c.isActive = 1
       AND m.isActive = 1
+    ORDER BY c.id
 """)
-
     Page<Channel> findActiveChannelsForUser(Integer userId, Pageable pageable);
 
     Optional<Channel> findByIdAndIsActive(Integer id, Integer isActive);

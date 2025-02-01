@@ -104,8 +104,13 @@ export default function InvitationsListItem({
                                 size="md"
                             />
                             <Text>
-                                {new Intl.DateTimeFormat("bg-BG").format(
-                                    new Date(invitationDate)
+                                {new Date(invitationDate).toLocaleString(
+                                    "en-US",
+                                    {
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric"
+                                    }
                                 )}
                             </Text>
                         </HStack>
